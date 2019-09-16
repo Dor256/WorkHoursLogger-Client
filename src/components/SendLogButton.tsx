@@ -1,16 +1,16 @@
 import React from "react";
-import axios from "axios";
+import workLogger from "../api/workLogger";
 
 const SendLogButton = () => {
     const handleClick = () => {
-        axios.get("https://work-logger-app.herokuapp.com/log", {
+        workLogger.get("/log", {
             params: {
                 dateString: new Date().toString()
             }
-        })
+        });
     }
 
-    return <button className="button" onClick={handleClick}>Send Log</button>
+    return <button className="button" onClick={handleClick}>Send Log</button>;
 }
 
 export default SendLogButton;

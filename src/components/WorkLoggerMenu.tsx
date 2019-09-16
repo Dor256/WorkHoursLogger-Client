@@ -7,8 +7,9 @@ import "./WorkLoggerMenu.scss";
 const WorkLoggerMenu = () => {
     return (
         <div className="container">
-            <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/>
-            <h1 className="heading">Work Logger</h1>
+            <h1 className="heading">
+            <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
+            </h1>
             <EnterButton/>
             <ExitButton/>
             <SendLogButton/>

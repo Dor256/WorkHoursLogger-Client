@@ -1,11 +1,11 @@
 import React from "react";
-import axios from "axios";
+import workLogger from "../api/workLogger";
 
 const ExitButton = () => {
     const handleClick = () => {
-        axios.put("https://work-logger-app.herokuapp.com/log", {
+        workLogger.put("/log", {
             dateString: new Date().toString()
-        })
+        });
     }
 
     return <button className="button" onClick={handleClick}>Exit</button>;
