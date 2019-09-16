@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid rgb(9, 118, 241);
+    margin: 15vh auto 15vh auto;
+    height: 23em;
+    width: 20em;
+    border-radius: 15px;
+    background-color: rgba(181, 196, 212, 0.74);
+}
+
+.button {
+    width: 45%;
+    height: 18%;
+    margin: 5%;
+    background-color: rgb(42, 101, 226);
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.heading {
+    align-self: center;
+    margin-top: 0;
+}
+
+.techsee-icon {
+    align-self: flex-start;
+    width: 3em;
+    border-radius: 10px;
+    top: 54%;
+    right: 56.5%;
+    margin-top: 3%;
+    margin-left: 3%;
+}
