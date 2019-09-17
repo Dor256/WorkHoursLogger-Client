@@ -1,14 +1,19 @@
 import React from "react";
 import workLogger from "../api/workLogger";
 
-const ExitButton = () => {
-    const handleClick = () => {
-        workLogger.put("/log", {
+type Props = {
+    trackLogRequest: (logStatus: boolean) => void
+}
+
+const ExitButton = (props: Props) => {
+    const handleClick = async () => {
+        await workLogger.put("/log", {
             dateString: new Date().toString()
         });
+        props.trackLogRequest(true);
     }
 
-    return <button className="button" onClick={handleClick}>Exit</button>;
+    return <button className="btn btn-primary button" onClick={handleClick}>Exit</button>;
 }
 
 export default ExitButton;

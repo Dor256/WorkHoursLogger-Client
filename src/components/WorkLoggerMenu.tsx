@@ -4,15 +4,19 @@ import ExitButton from "./ExitButton";
 import SendLogButton from "./SendLogButton";
 import "./WorkLoggerMenu.scss";
 
-const WorkLoggerMenu = () => {
+type Props = {
+    trackLogRequest: (logStatus: boolean) => void
+}
+
+const WorkLoggerMenu = (props: Props) => {
     return (
-        <div className="container">
+        <div className="menu">
             <h1 className="heading">
-            <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
+                <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
             </h1>
-            <EnterButton/>
-            <ExitButton/>
-            <SendLogButton/>
+            <EnterButton trackLogRequest={props.trackLogRequest}/>
+            <ExitButton trackLogRequest={props.trackLogRequest}/>
+            <SendLogButton trackLogRequest={props.trackLogRequest}/>
         </div>
     );
 }
