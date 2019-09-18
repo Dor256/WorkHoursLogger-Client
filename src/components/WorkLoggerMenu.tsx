@@ -5,7 +5,7 @@ import SendLogButton from "./SendLogButton";
 import "./WorkLoggerMenu.scss";
 
 type Props = {
-    trackLogRequest: (logStatus: boolean) => void
+    trackLogRequest: (success: boolean) => void
 }
 
 const WorkLoggerMenu = (props: Props) => {

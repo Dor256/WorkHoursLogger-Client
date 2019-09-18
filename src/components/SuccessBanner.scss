@@ -1,12 +1,15 @@
-.alert.alert-success {
+.alert {
     text-align: center;
     position: absolute;
-    top: 0;
     width: 100%;
+    top: 0;
+    visibility: hidden;
 }
 
-.movedown {
+.alert.movedown {
     animation: moveDown 500ms linear forwards;
+    visibility: visible;
+    transition: 500ms visibility;
 }
 
 @keyframes moveDown {
@@ -16,4 +19,15 @@
     100% {
         top: 0;
     }
+}
+
+.alert.fade-exit {
+    opacity: 1;
+    visibility: visible;
+}
+
+.alert.fade-exit-active {
+    opacity: 0.01;
+    visibility: hidden;
+    transition: opacity 1000ms, visibility 1000ms;
 }
