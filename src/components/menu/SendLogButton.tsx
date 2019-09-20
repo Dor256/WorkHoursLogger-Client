@@ -1,8 +1,9 @@
 import React from "react";
-import workLogger from "../api/workLogger";
+import workLogger from "../../api/workLogger";
 
 type Props = {
-    trackLogRequest: (success: boolean) => void
+    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    isInside: boolean
 }
 
 const SendLogButton = (props: Props) => {
@@ -13,12 +14,12 @@ const SendLogButton = (props: Props) => {
                     dateString: new Date().toString()
                 }
             });
-            props.trackLogRequest(true);
+            props.isInside ? props.trackLogRequest(true, true) : props.trackLogRequest(true, false);
         } catch(err) {
             if(err.message === "Network Error") {
-                props.trackLogRequest(true);
+                props.trackLogRequest(true, false);
             } else {
-                props.trackLogRequest(false);
+                props.trackLogRequest(false, false);
             }
         }
     }

@@ -1,22 +1,26 @@
 import React from "react";
-import workLogger from "../api/workLogger";
+import workLogger from "../../api/workLogger";
 
 type Props = {
-    trackLogRequest: (success: boolean) => void
+    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    isInside: boolean
 }
 
 const ExitButton = (props: Props) => {
     const handleClick = async () => {
         try{
+            if(!props.isInside) {
+                throw new Error("Can't exit without entering!");
+            }
             await workLogger.put("/log", {
                 dateString: new Date().toString()
             });
-            props.trackLogRequest(true);
+            props.trackLogRequest(true, false);
         } catch(err) {
             if(err.message === "Network Error") {
-                props.trackLogRequest(true);
+                props.trackLogRequest(true, false);
             } else {
-                props.trackLogRequest(false);
+                props.trackLogRequest(false, null);
             }
         }
     }

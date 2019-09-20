@@ -5,7 +5,8 @@ import SendLogButton from "./SendLogButton";
 import "./WorkLoggerMenu.scss";
 
 type Props = {
-    trackLogRequest: (success: boolean) => void
+    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    isInside: boolean
 }
 
 const WorkLoggerMenu = (props: Props) => {
@@ -14,9 +15,9 @@ const WorkLoggerMenu = (props: Props) => {
             <h1 className="heading">
                 <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
             </h1>
-            <EnterButton trackLogRequest={props.trackLogRequest}/>
-            <ExitButton trackLogRequest={props.trackLogRequest}/>
-            <SendLogButton trackLogRequest={props.trackLogRequest}/>
+            <EnterButton trackLogRequest={props.trackLogRequest} isInside={props.isInside}/>
+            <ExitButton trackLogRequest={props.trackLogRequest} isInside={props.isInside}/>
+            <SendLogButton trackLogRequest={props.trackLogRequest} isInside={props.isInside}/>
         </div>
     );
 }

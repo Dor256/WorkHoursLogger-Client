@@ -11,10 +11,17 @@ const SuccessBanner = (props: Props) => {
     const hideClass = props.mounted ? "movedown" : null;
     const bannerTypeClass = props.success ? "alert-success" : "alert-danger";
 
+    const getBannerMessage = (): string => {
+            if(props.success) {
+                return "Success!";
+            }
+            return "Something went wrong!";
+        }
+
     return (
         <CSSTransition in={props.mounted} timeout={1000} classNames="fade">
             <div className={`alert ${bannerTypeClass} ${hideClass}`} role="alert">
-                Logged Succesfuly!
+                {getBannerMessage()}
             </div>
         </CSSTransition>
     );
