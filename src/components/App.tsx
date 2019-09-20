@@ -21,10 +21,9 @@ class App extends React.Component<{}, State> {
                         dateString: new Date().toString()
                     }
             });
-            console.log(response);
-            this.setState({ enter: true, isLoading: false });
+            response.data ? this.setState({ enter: true, isLoading: false }) : this.setState({ enter: false, isLoading: false });
         } catch(err) {
-            this.setState({ enter: false });
+            this.setState({ enter: true });
         } 
     }
 
