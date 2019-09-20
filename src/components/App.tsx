@@ -16,11 +16,12 @@ class App extends React.Component<{}, State> {
 
     componentDidMount = async () => {
         try {
-            await workLogger.get("/log", {
+            const response = await workLogger.get("/log", {
                     params: {
                         dateString: new Date().toString()
                     }
             });
+            console.log(response);
             this.setState({ enter: true, isLoading: false });
         } catch(err) {
             this.setState({ enter: false });
