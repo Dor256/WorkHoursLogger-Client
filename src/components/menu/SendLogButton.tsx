@@ -19,7 +19,7 @@ const SendLogButton = (props: Props) => {
             if(err.message === "Network Error") {
                 props.trackLogRequest(true, false);
             } else {
-                props.trackLogRequest(false, false);
+                props.trackLogRequest(false, true);
             }
         }
     }
