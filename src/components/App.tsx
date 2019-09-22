@@ -16,7 +16,7 @@ class App extends React.Component<{}, State> {
 
     componentDidMount = async () => {
         try {
-            const response = await workLogger.get("/log", {
+            const response = await workLogger.get("/", {
                     params: {
                         dateString: new Date().toString()
                     }
