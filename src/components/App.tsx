@@ -21,14 +21,18 @@ class App extends React.Component<{}, State> {
                         dateString: new Date().toString()
                     }
             });
-            response.data ? this.setState({ isLoading: false }) : this.setState({ enter: false, isLoading: false });
+            response.data ? this.setState({ enter: true, isLoading: false }) : this.setState({ enter: false, isLoading: false });
         } catch(err) {
             this.setState({ enter: true, isLoading: false });
         } 
     }
 
     trackLogRequest = (success: boolean, enter: boolean | null) => {
-        this.setState({ logStatus: true, success: success, enter: enter });
+        if(enter !== null) {
+            this.setState({ logStatus: true, success: success, enter: enter });
+        } else {
+            this.setState({ logStatus: true, success: success });
+        }
         setTimeout(() => this.setState({ logStatus: false }), 3000);
     }
 
