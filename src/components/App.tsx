@@ -16,11 +16,7 @@ class App extends React.Component<{}, State> {
 
     componentDidMount = async () => {
         try {
-            const response = await workLogger.get("/check", {
-                    params: {
-                        dateString: new Date().toString()
-                    }
-            });
+            const response = await workLogger.get("/check");
             response.data ? this.setState({ enter: true, isLoading: false }) : this.setState({ enter: false, isLoading: false });
         } catch(err) {
             this.setState({ enter: true, isLoading: false });
