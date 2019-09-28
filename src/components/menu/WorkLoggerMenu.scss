@@ -1,13 +1,11 @@
-body {
-    background-image: url(/appBackground.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
+html {
+    height: 100%;
 }
 
-@media only screen and (max-width: 1000px) {
-    body {
-        background-size: 100em;
-    }
+body {
+    height: 100%;
+    background: rgb(4,96,149);
+    background: linear-gradient(121deg, rgba(4,96,149,1) 1%, rgba(103,170,214,1) 51%, rgba(7,98,156,1) 100%);
 }
 
 .menu {
