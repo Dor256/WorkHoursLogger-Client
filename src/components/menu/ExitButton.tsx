@@ -9,7 +9,7 @@ type Props = {
 const ExitButton = (props: Props) => {
     const handleClick = async () => {
         try{
-            if(!props.isInside) {
+            if(props.isInside) {
                 await workLogger.put("/log", {
                     dateString: new Date().toString()
                 });
