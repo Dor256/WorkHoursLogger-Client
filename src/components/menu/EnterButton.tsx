@@ -12,9 +12,9 @@ const EnterButton = (props: Props) => {
     const handleClick = async () => {
         try {
             if(!props.isInside) {
-                // await workLogger.post("/log", {
-                //     dateString: new Date().toString()
-                // });
+                await workLogger.post("/log", {
+                    dateString: new Date().toString()
+                });
                 props.trackLogRequest(true, true);
             }
         } catch(err) {

@@ -9,11 +9,11 @@ type Props = {
 const SendLogButton = (props: Props) => {
     const handleClick = async () => {
         try {
-            // await workLogger.get("/log", {
-            //     params: {
-            //         dateString: new Date().toString()
-            //     }
-            // });
+            await workLogger.get("/log", {
+                params: {
+                    dateString: new Date().toString()
+                }
+            });
             props.isInside ? props.trackLogRequest(true, true) : props.trackLogRequest(true, false);
         } catch(err) {
             if(err.message === "Network Error") {

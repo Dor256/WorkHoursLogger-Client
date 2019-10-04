@@ -10,9 +10,9 @@ const ExitButton = (props: Props) => {
     const handleClick = async () => {
         try{
             if(props.isInside) {
-                // await workLogger.put("/log", {
-                //     dateString: new Date().toString()
-                // });
+                await workLogger.put("/log", {
+                    dateString: new Date().toString()
+                });
                 props.trackLogRequest(true, false);
             } else {
                 props.trackLogRequest(false, null);
