@@ -9,10 +9,9 @@ type Props = {
 const SendLogButton = (props: Props) => {
     const handleClick = async () => {
         try {
-            await workLogger.get("/log", {
-                params: {
-                    dateString: new Date().toString()
-                }
+            await workLogger.post("/send", {
+                dateString: new Date().toString(),
+                userEmail: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getEmail()
             });
             props.isInside ? props.trackLogRequest(true, true) : props.trackLogRequest(true, false);
         } catch(err) {

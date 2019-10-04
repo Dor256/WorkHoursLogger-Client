@@ -30,7 +30,7 @@ class App extends React.Component<{}, State> {
     }
 
     onAuthLoad = async () => {
-        await gapi.client.init({ clientId: clientId,scope: "email" })
+        await gapi.client.init({ clientId: clientId, scope: "email" })
             const authInstance = gapi.auth2.getAuthInstance();
             authInstance.isSignedIn.listen(this.onSignIn);
             const user = authInstance.currentUser.get();
@@ -53,7 +53,10 @@ class App extends React.Component<{}, State> {
     fetchAppStatus = async () => {
         if(this.state.currentUser && this.state.currentUser.isSignedIn()) {
             try {
-                const response = await workLogger.get("/check");
+                const response = await workLogger.post("/check", {
+                    dateString: new Date().toString(),
+                    userEmail: this.state.currentUser.getBasicProfile().getEmail()
+                });
                 response.data ? this.setState({ enter: true, isLoading: false }) : this.setState({ enter: false, isLoading: false });
             } catch(err) {
                 this.setState({ enter: true, isLoading: false });
