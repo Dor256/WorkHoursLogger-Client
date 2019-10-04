@@ -1,6 +1,6 @@
 import React from "react";
 import { CSSTransition } from "react-transition-group";
-import "./SuccessBanner.scss";
+import "./StatusBanner.scss";
 
 type Props = {
     mounted: boolean,

@@ -1,0 +1,31 @@
+#auth-button {
+    display: flex;
+    margin: 40vh auto 15vh auto;
+    width: 17em;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    border: 3px solid rgb(9, 118, 241);
+}
+
+#auth-icon{
+    width: 3em;
+    border-radius: 6px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#auth-text {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding-left: 3%;
+    padding-right: 3.2%;
+    background-color: rgba(181, 196, 212, 0.74);
+    width: 90%;
+    border-radius: 6px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
