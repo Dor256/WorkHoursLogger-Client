@@ -1,8 +1,5 @@
-export const validUser = (user: GoogleUser | null): boolean => {
-    if(user) {
-        return user.getBasicProfile().getEmail().split("@")[1] === "techsee.me";
-    } 
-    return false;
+export const validUser = (user: GoogleUser): boolean => {
+    return user.getBasicProfile().getEmail().split("@")[1] === "techsee.me";
 } 
 
 const userAgent = window.navigator.userAgent;

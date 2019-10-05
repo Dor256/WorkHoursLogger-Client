@@ -51,12 +51,13 @@ class App extends React.Component<{}, State> {
     }
 
     onSignIn = (signedIn: boolean) => {
-        if(signedIn && validUser(this.state.currentUser)) {
-            this.setState({ isLoading: false });
-        } else {
-            gapi.auth2.getAuthInstance().signOut();
-            this.setState({ logStatus: true, success: false, bannerMessage: "You need a TechSee email to use this app" });
-            setTimeout(() => this.setState({ logStatus: false }), 3000);
+        if(signedIn && this.state.currentUser) {
+            if(validUser(this.state.currentUser)){
+                this.setState({ isLoading: false });
+            } else {
+                gapi.auth2.getAuthInstance().signOut();
+                this.trackLogRequest(false, this.state.inOffice, "You need a TechSee email to use this app")
+            }
         }
     }
 
