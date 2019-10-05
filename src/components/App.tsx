@@ -65,14 +65,10 @@ class App extends React.Component<{}, State> {
 
     fetchAppStatus = async () => {
         if(this.state.currentUser && this.state.currentUser.isSignedIn()) {
-            try {
-                const response = await workLogger.post("/check", {
-                    userEmail: this.state.currentUser.getBasicProfile().getEmail()
-                });
-                response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
-            } catch(err) {
-                this.setState({ inOffice: true, isLoading: false });
-            }
+            const response = await workLogger.post("/check", {
+                userEmail: this.state.currentUser.getBasicProfile().getEmail()
+            });
+            response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
         } 
     }
 
