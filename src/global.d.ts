@@ -1,5 +1,6 @@
 type AuthObject = {
     clientId?: string,
+    cookiePolicy: string,
     scope?: string,
     prompt?: string
 }
