@@ -2,7 +2,7 @@ import React from "react";
 import workLogger from "../../api/workLogger";
 
 type Props = {
-    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
     isInside: boolean
 }
 
@@ -15,7 +15,7 @@ const ExitButton = (props: Props) => {
                 });
                 props.trackLogRequest(true, false);
             } else {
-                props.trackLogRequest(false, null);
+                props.trackLogRequest(false, null, "Can't exit without entering!");
             }
         } catch(err) {
             if(err.message === "Network Error") {

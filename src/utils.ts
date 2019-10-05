@@ -7,4 +7,4 @@ export const validUser = (user: GoogleUser | null): boolean => {
 
 const userAgent = window.navigator.userAgent;
 
-export const isUsingSafari = userAgent.indexOf("Chrome") == -1 && userAgent.indexOf("Safari") > -1;
+export const isUsingSafari = userAgent.indexOf("Chrome") === -1 && userAgent.indexOf("Safari") > -1;

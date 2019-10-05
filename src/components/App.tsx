@@ -10,9 +10,10 @@ import "./App.scss";
 type State = {
     logStatus: boolean,
     success: boolean,
-    enter: boolean | null,
+    inOffice: boolean | null,
     isLoading: boolean,
-    currentUser: GoogleUser | null
+    currentUser: GoogleUser | null,
+    bannerMessage: string
 }
 
 
@@ -20,9 +21,10 @@ class App extends React.Component<{}, State> {
     state: State = { 
         logStatus: false,
         success: true,
-        enter: false, 
+        inOffice: false, 
         isLoading: true,
-        currentUser: null 
+        currentUser: null,
+        bannerMessage: "" 
     };
 
     componentDidMount = () => {
@@ -40,13 +42,11 @@ class App extends React.Component<{}, State> {
             } else {
                 this.setState({ currentUser: user, isLoading: true });
             }
-        } catch(err) {
-            // Work-Around until Safari bug is fixed
-            if(isUsingSafari) {
-                this.setState({ currentUser: null, isLoading: false });
-            }
-        } finally {
             this.fetchAppStatus();
+        } catch(err) {
+            if(isUsingSafari) {
+                alert("There is a bug with Safari, please clear your cache and try again in 5 minutes or open in private mode");
+            }
         }
     }
 
@@ -55,6 +55,8 @@ class App extends React.Component<{}, State> {
             this.setState({ isLoading: false });
         } else {
             gapi.auth2.getAuthInstance().signOut();
+            this.setState({ logStatus: true, success: false, bannerMessage: "You need a TechSee email to use this app" });
+            setTimeout(() => this.setState({ logStatus: false }), 3000);
         }
     }
 
@@ -64,18 +66,19 @@ class App extends React.Component<{}, State> {
                 const response = await workLogger.post("/check", {
                     userEmail: this.state.currentUser.getBasicProfile().getEmail()
                 });
-                response.data ? this.setState({ enter: true, isLoading: false }) : this.setState({ enter: false, isLoading: false });
+                response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
             } catch(err) {
-                this.setState({ enter: true, isLoading: false });
+                this.setState({ inOffice: true, isLoading: false });
             }
         } 
     }
 
-    trackLogRequest = (success: boolean, enter: boolean | null) => {
-        if(enter !== null) {
-            this.setState({ logStatus: true, success: success, enter: enter });
+    trackLogRequest = (success: boolean, inOffice: boolean | null, bannerMessage?: string) => {
+        const message = bannerMessage ? bannerMessage : "";
+        if(inOffice !== null) {
+            this.setState({ logStatus: true, success: success, inOffice: inOffice, bannerMessage: message });
         } else {
-            this.setState({ logStatus: true, success: success });
+            this.setState({ logStatus: true, success: success, bannerMessage: message });
         }
         setTimeout(() => this.setState({ logStatus: false }), 3000);
     }
@@ -83,10 +86,14 @@ class App extends React.Component<{}, State> {
     renderContent = () => {
         return (
             <>
-                <StatusBanner mounted={this.state.logStatus} success={this.state.success}/>
+                <StatusBanner 
+                    mounted={this.state.logStatus} 
+                    success={this.state.success}
+                    message={this.state.bannerMessage}
+                />
                 <WorkLoggerMenu 
                     trackLogRequest={this.trackLogRequest} 
-                    isInOffice={this.state.enter} 
+                    isInOffice={this.state.inOffice} 
                     currentUser={this.state.currentUser}
                 />
             </>

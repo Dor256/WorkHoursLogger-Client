@@ -3,7 +3,7 @@ import workLogger from "../../api/workLogger";
 import "./EnterButton.scss";
 
 type Props = {
-    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
     isInside: boolean
 }
 
@@ -21,7 +21,7 @@ const EnterButton = (props: Props) => {
             if(err.message === "Network Error") {
                 props.trackLogRequest(true, true);
             } else {
-                props.trackLogRequest(false, false);
+                props.trackLogRequest(false, false, "Something Went Wrong!");
             }
         }
     }

@@ -4,7 +4,8 @@ import "./StatusBanner.scss";
 
 type Props = {
     mounted: boolean,
-    success: boolean
+    success: boolean,
+    message: string
 }
 
 const SuccessBanner = (props: Props) => {
@@ -15,7 +16,7 @@ const SuccessBanner = (props: Props) => {
             if(props.success) {
                 return "Success!";
             }
-            return "Something went wrong!";
+            return props.message;
         }
 
     return (

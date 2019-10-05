@@ -6,7 +6,7 @@ import "./WorkLoggerMenu.scss";
 import GoogleAuth from "../GoogleAuth";
 
 type Props = {
-    trackLogRequest: (success: boolean, enter: boolean | null) => void,
+    trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
     isInOffice: boolean | null,
     currentUser: GoogleUser | null
 }
