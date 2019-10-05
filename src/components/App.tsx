@@ -1,6 +1,6 @@
 import React from "react";
 import workLogger from "../api/workLogger";
-import { validUser } from "../utils";
+import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
 import StatusBanner from "./StatusBanner";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
@@ -40,9 +40,13 @@ class App extends React.Component<{}, State> {
             } else {
                 this.setState({ currentUser: user, isLoading: true });
             }
-            this.fetchAppStatus();
         } catch(err) {
-            this.setState({ currentUser: null, isLoading: false });
+            // Work-Around until Safari bug is fixed
+            if(isUsingSafari) {
+                this.setState({ currentUser: null, isLoading: false });
+            }
+        } finally {
+            this.fetchAppStatus();
         }
     }
 
