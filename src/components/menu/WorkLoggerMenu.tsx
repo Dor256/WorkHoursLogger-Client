@@ -1,5 +1,4 @@
 import React from "react";
-import workLogger from "../../api/workLogger";
 import EnterButton from "./EnterButton";
 import ExitButton from "./ExitButton";
 import SendLogButton from "./SendLogButton";

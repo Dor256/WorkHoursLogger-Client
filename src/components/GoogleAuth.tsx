@@ -1,8 +1,5 @@
 import React from "react";
-import clientId  from "../api/OAuth";
 import "./GoogleAuth.scss";
-
-//TODO: Finish implementing Google OAuth2 for Client side
 
 class GoogleAuth extends React.Component {
 
