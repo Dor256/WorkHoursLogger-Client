@@ -11,26 +11,24 @@ type Props = {
     currentUser: GoogleUser | null
 }
 
-class WorkLoggerMenu extends React.Component<Props> {
-    renderMenu = () => {
-        if(this.props.currentUser && this.props.currentUser.isSignedIn() && this.props.isInOffice !== null) {
+const WorkLoggerMenu = (props: Props) => {
+    const renderMenu = () => {
+        if(props.currentUser && props.currentUser.isSignedIn() && props.isInOffice !== null) {
             return (
                 <div className="menu">
                     <h1 className="heading">
                         <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
                     </h1>
-                    <EnterButton trackLogRequest={this.props.trackLogRequest} isInside={this.props.isInOffice}/>
-                    <ExitButton trackLogRequest={this.props.trackLogRequest} isInside={this.props.isInOffice}/>
-                    <SendLogButton trackLogRequest={this.props.trackLogRequest} isInside={this.props.isInOffice}/>
+                    <EnterButton trackLogRequest={props.trackLogRequest} isInside={props.isInOffice}/>
+                    <ExitButton trackLogRequest={props.trackLogRequest} isInside={props.isInOffice}/>
+                    <SendLogButton trackLogRequest={props.trackLogRequest} isInside={props.isInOffice}/>
                 </div>
             );
         }
         return <GoogleAuth/>;
     }
 
-    render() {
-        return this.renderMenu();
-    }
+    return renderMenu();
 }
 
 export default WorkLoggerMenu;
