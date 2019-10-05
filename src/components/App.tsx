@@ -30,7 +30,7 @@ class App extends React.Component<{}, State> {
     }
 
     onAuthLoad = async () => {
-        await gapi.client.init({ clientId: clientId, cookiePolicy: "none", scope: "email" })
+        await gapi.client.init({ clientId: clientId, cookie_policy: "none", scope: "email" });
             const authInstance = gapi.auth2.getAuthInstance();
             authInstance.isSignedIn.listen(this.onSignIn);
             const user = authInstance.currentUser.get();
