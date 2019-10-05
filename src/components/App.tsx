@@ -58,6 +58,8 @@ class App extends React.Component<{}, State> {
                 gapi.auth2.getAuthInstance().signOut();
                 this.trackLogRequest(false, this.state.inOffice, "You need a TechSee email to use this app")
             }
+        } else {
+            this.setState({ currentUser: null });
         }
     }
 
