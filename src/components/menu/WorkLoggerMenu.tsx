@@ -4,6 +4,7 @@ import ExitButton from "./ExitButton";
 import SendLogButton from "./SendLogButton";
 import "./WorkLoggerMenu.scss";
 import GoogleAuth from "../GoogleAuth";
+import { validUser } from "../../utils";
 
 type Props = {
     trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
@@ -13,7 +14,7 @@ type Props = {
 
 const WorkLoggerMenu = (props: Props) => {
     const renderMenu = () => {
-        if(props.currentUser && props.currentUser.isSignedIn() && props.isInOffice !== null) {
+        if(props.currentUser && props.currentUser.isSignedIn() && validUser(props.currentUser) && props.isInOffice !== null) {
             const userEmail = props.currentUser.getBasicProfile().getEmail();
             return (
                 <div className="menu">

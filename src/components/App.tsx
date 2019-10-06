@@ -40,7 +40,7 @@ class App extends React.Component<{}, State> {
             if(!user.isSignedIn()){
                 this.setState({ currentUser: user, isLoading: false });
             } else {
-                this.setState({ currentUser: user, isLoading: true });
+                this.setState({ currentUser: user, isLoading: false });
             }
             this.fetchAppStatus();
         } catch(err) {
@@ -51,25 +51,35 @@ class App extends React.Component<{}, State> {
     }
 
     onSignIn = (signedIn: boolean) => {
-        if(signedIn && this.state.currentUser) {
-            if(validUser(this.state.currentUser)){
-                this.setState({ isLoading: false });
-            } else {
-                gapi.auth2.getAuthInstance().signOut();
-                this.trackLogRequest(false, this.state.inOffice, "You need a TechSee email to use this app")
-            }
-        } else {
-            this.setState({ currentUser: null });
+        if(signedIn && this.state.currentUser && validUser(this.state.currentUser)) {
+            this.setState({ isLoading: false });
+        } else if(!this.state.currentUser || !validUser(this.state.currentUser)) {
+            gapi.auth2.getAuthInstance().signOut();
+            this.resetInvalidUser(true);
         }
     }
 
     fetchAppStatus = async () => {
         if(this.state.currentUser && this.state.currentUser.isSignedIn()) {
+            if(!validUser(this.state.currentUser)) {
+                this.resetInvalidUser(false);
+                return;
+            }
             const response = await workLogger.post("/check", {
                 userEmail: this.state.currentUser.getBasicProfile().getEmail()
             });
             response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
-        } 
+        }
+    }
+
+    resetInvalidUser = (shouldShowBanner: boolean) => {
+        this.setState({ 
+            success: false, 
+            bannerMessage: "You need a TechSee email to use this app", 
+            logStatus: shouldShowBanner,
+            isLoading: false
+         });
+        setTimeout(() => this.setState({ logStatus: false }), 3000);
     }
 
     trackLogRequest = (success: boolean, inOffice: boolean | null, bannerMessage?: string) => {
