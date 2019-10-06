@@ -3,7 +3,8 @@ import workLogger from "../../api/workLogger";
 
 type Props = {
     trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
-    isInside: boolean
+    isInside: boolean,
+    userEmail: string
 }
 
 const ExitButton = (props: Props) => {
@@ -11,7 +12,8 @@ const ExitButton = (props: Props) => {
         try{
             if(props.isInside) {
                 await workLogger.put("/log", {
-                    dateString: new Date().toString()
+                    dateString: new Date().toString(),
+                    userEmail: props.userEmail
                 });
                 props.trackLogRequest(true, false);
             } else {

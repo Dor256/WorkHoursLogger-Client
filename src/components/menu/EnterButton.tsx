@@ -4,7 +4,8 @@ import "./EnterButton.scss";
 
 type Props = {
     trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
-    isInside: boolean
+    isInside: boolean,
+    userEmail: string
 }
 
 const EnterButton = (props: Props) => {
@@ -13,7 +14,8 @@ const EnterButton = (props: Props) => {
         try {
             if(!props.isInside) {
                 await workLogger.post("/log", {
-                    dateString: new Date().toString()
+                    dateString: new Date().toString(),
+                    userEmail: props.userEmail
                 });
                 props.trackLogRequest(true, true);
             }

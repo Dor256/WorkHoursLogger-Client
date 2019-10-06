@@ -3,7 +3,8 @@ import workLogger from "../../api/workLogger";
 
 type Props = {
     trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
-    isInside: boolean
+    isInside: boolean,
+    userEmail: string
 }
 
 const SendLogButton = (props: Props) => {
@@ -11,7 +12,7 @@ const SendLogButton = (props: Props) => {
         try {
             await workLogger.post("/send", {
                 dateString: new Date().toString(),
-                userEmail: gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getEmail()
+                userEmail: props.userEmail
             });
             props.isInside ? props.trackLogRequest(true, true) : props.trackLogRequest(true, false);
         } catch(err) {
