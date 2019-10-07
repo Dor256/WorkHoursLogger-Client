@@ -13,10 +13,10 @@ const EnterButton = (props: Props) => {
     const handleClick = async () => {
         try {
             if(!props.isInside) {
-                await workLogger.post("/log", {
-                    dateString: new Date().toString(),
-                    userEmail: props.userEmail
-                });
+                // await workLogger.post("/log", {
+                //     dateString: new Date().toString(),
+                //     userEmail: props.userEmail
+                // });
                 props.trackLogRequest(true, true);
             }
         } catch(err) {

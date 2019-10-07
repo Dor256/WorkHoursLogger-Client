@@ -37,12 +37,10 @@ class App extends React.Component<{}, State> {
             const authInstance = gapi.auth2.getAuthInstance();
             authInstance.isSignedIn.listen(this.onSignIn);
             const user = authInstance.currentUser.get();
-            if(!user.isSignedIn()){
-                this.setState({ currentUser: user, isLoading: false });
-            } else {
-                this.setState({ currentUser: user, isLoading: false });
+            this.setState({ currentUser: user, isLoading: false });
+            if(user.isSignedIn()){
+                this.fetchAppStatus();
             }
-            this.fetchAppStatus();
         } catch(err) {
             if(isUsingSafari) {
                 alert("There is a bug with Safari, please clear your cache and try again in 5 minutes or open in private mode");
@@ -52,7 +50,8 @@ class App extends React.Component<{}, State> {
 
     onSignIn = (signedIn: boolean) => {
         if(signedIn && this.state.currentUser && validUser(this.state.currentUser)) {
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: true });
+            this.fetchAppStatus();
         } else if(!this.state.currentUser || !validUser(this.state.currentUser)) {
             gapi.auth2.getAuthInstance().signOut();
             this.resetInvalidUser(true);
@@ -68,6 +67,7 @@ class App extends React.Component<{}, State> {
             const response = await workLogger.post("/check", {
                 userEmail: this.state.currentUser.getBasicProfile().getEmail()
             });
+
             response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
         }
     }

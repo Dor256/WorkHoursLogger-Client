@@ -11,10 +11,10 @@ const ExitButton = (props: Props) => {
     const handleClick = async () => {
         try{
             if(props.isInside) {
-                await workLogger.put("/log", {
-                    dateString: new Date().toString(),
-                    userEmail: props.userEmail
-                });
+                // await workLogger.put("/log", {
+                //     dateString: new Date().toString(),
+                //     userEmail: props.userEmail
+                // });
                 props.trackLogRequest(true, false);
             } else {
                 props.trackLogRequest(false, null, "Can't exit without entering!");
