@@ -54,32 +54,17 @@ class App extends React.Component<{}, State> {
             this.fetchAppStatus();
         } else if(!this.state.currentUser || !validUser(this.state.currentUser)) {
             gapi.auth2.getAuthInstance().signOut();
-            this.resetInvalidUser(true);
+            this.trackLogRequest(false, this.state.inOffice, "You need a TechSee email to use this app");
         }
     }
 
     fetchAppStatus = async () => {
         if(this.state.currentUser && this.state.currentUser.isSignedIn()) {
-            if(!validUser(this.state.currentUser)) {
-                this.resetInvalidUser(false);
-                return;
-            }
             const response = await workLogger.post("/check", {
                 userEmail: this.state.currentUser.getBasicProfile().getEmail()
             });
-
             response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
         }
-    }
-
-    resetInvalidUser = (shouldShowBanner: boolean) => {
-        this.setState({ 
-            success: false, 
-            bannerMessage: "You need a TechSee email to use this app", 
-            logStatus: shouldShowBanner,
-            isLoading: false
-         });
-        setTimeout(() => this.setState({ logStatus: false }), 3000);
     }
 
     trackLogRequest = (success: boolean, inOffice: boolean | null, bannerMessage?: string) => {
