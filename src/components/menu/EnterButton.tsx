@@ -1,10 +1,11 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
 import "./EnterButton.scss";
+import { TrackLogRequestParams } from "../../types/types";
 
 type Props = {
-    trackLogRequest: (success: boolean, enter: boolean | null, bannerMessage?: string) => void,
-    isInside: boolean,
+    trackLogRequest(params: TrackLogRequestParams): void,
+    inOffice: boolean,
     userEmail: string
 }
 
@@ -12,24 +13,24 @@ const EnterButton = (props: Props) => {
 
     const handleClick = async () => {
         try {
-            if(!props.isInside) {
-                // await workLogger.post("/log", {
-                //     dateString: new Date().toString(),
-                //     userEmail: props.userEmail
-                // });
-                props.trackLogRequest(true, true);
+            if(!props.inOffice) {
+                await workLogger.post("/log", {
+                    dateString: new Date().toString(),
+                    userEmail: props.userEmail
+                });
+                props.trackLogRequest({ success: true, inOffice: true });
             }
         } catch(err) {
             if(err.message === "Network Error") {
-                props.trackLogRequest(true, true);
+                props.trackLogRequest({ success: true, inOffice: true });
             } else {
-                props.trackLogRequest(false, false, "Something Went Wrong!");
+                props.trackLogRequest({ success: false, inOffice: false, bannerMessage: "Something Went Wrong!" });
             }
         }
     }
 
     const renderButton = () => {
-        if(props.isInside) {
+        if(props.inOffice) {
             return (
                 <div className="entered-border">
                     <button className="btn btn-primary button enter-button" onClick={handleClick}>Enter</button>

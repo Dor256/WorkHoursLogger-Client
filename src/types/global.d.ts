@@ -37,25 +37,12 @@ type AuthInstance = {
     signOut: () => Promise<void>
 }
 
-type SignInRenderOptions = {
-    scope?: string,
-    width?: number,
-    height?: number,
-    longtitle?: boolean,
-    theme?: string
-}
-
-type SignInBox = {
-    render: (id: string, options: SignInRenderOptions) => void;
-}
-
 type GoogleAPI = {
     load: LoadFunction,
     client: OAuthClient,
     auth2: {
         getAuthInstance: () => AuthInstance,
-    },
-    signin2: SignInBox
+    }
 }
 
 declare const gapi: GoogleAPI;

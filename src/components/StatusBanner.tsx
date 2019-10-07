@@ -18,7 +18,7 @@ const SuccessBanner = (props: Props) => {
             }
             return props.message;
         }
-
+ 
     return (
         <CSSTransition in={props.mounted} timeout={1000} classNames="fade">
             <div className={`alert ${bannerTypeClass} ${hideClass}`} role="alert">

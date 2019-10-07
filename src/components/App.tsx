@@ -1,31 +1,23 @@
 import React from "react";
-import workLogger from "../api/workLogger";
 import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
 import StatusBanner from "./StatusBanner";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 import LoadingSpinner from "./LoadingSpinner";
 import "./App.scss";
+import GoogleAuth from "./GoogleAuth";
 
 type State = {
-    logStatus: boolean,
-    success: boolean,
-    inOffice: boolean | null,
     isLoading: boolean,
-    currentUser: GoogleUser | null,
-    bannerMessage: string
+    showBanner: boolean,
+    userEmail: string,
 }
 
 
 class App extends React.Component<{}, State> {
-    state: State = { 
-        logStatus: false,
-        success: true,
-        inOffice: false, 
-        isLoading: true,
-        currentUser: null,
-        bannerMessage: "" 
-    };
+    state: State = { isLoading: true, showBanner: false, userEmail: "" };
+    private bannerMessage = "You need a TechSee email to use this app";
+    private currentUser?: GoogleUser;
 
     componentDidMount = () => {
         gapi.load("auth2:client", this.onAuthLoad);
@@ -35,12 +27,11 @@ class App extends React.Component<{}, State> {
         try {
             await gapi.client.init({ clientId: clientId, scope: "email" });
             const authInstance = gapi.auth2.getAuthInstance();
+            this.currentUser = authInstance.currentUser.get();
+            const basicUserProfile = this.currentUser.getBasicProfile();
             authInstance.isSignedIn.listen(this.onSignIn);
-            const user = authInstance.currentUser.get();
-            this.setState({ currentUser: user, isLoading: false });
-            if(user.isSignedIn()){
-                this.fetchAppStatus();
-            }
+            const userEmail = basicUserProfile ? basicUserProfile.getEmail() : "";
+            this.setState({ isLoading: false, userEmail: userEmail });
         } catch(err) {
             if(isUsingSafari) {
                 alert("There is a bug with Safari, please clear your cache and try again in 5 minutes or open in private mode");
@@ -49,56 +40,33 @@ class App extends React.Component<{}, State> {
     }
 
     onSignIn = (signedIn: boolean) => {
-        if(signedIn && this.state.currentUser && validUser(this.state.currentUser)) {
-            this.setState({ isLoading: true });
-            this.fetchAppStatus();
-        } else if(!this.state.currentUser || !validUser(this.state.currentUser)) {
-            gapi.auth2.getAuthInstance().signOut();
-            this.trackLogRequest(false, this.state.inOffice, "You need a TechSee email to use this app");
+        if(signedIn && this.currentUser && validUser(this.currentUser)) {
+            const userEmail = this.currentUser.getBasicProfile().getEmail();
+            this.setState({ isLoading: false, userEmail: userEmail });
+        } else if(!this.currentUser || !validUser(this.currentUser)) {
+            if(!signedIn) {
+                this.setState({ showBanner: true })
+                setTimeout(() => this.setState({ showBanner: false }), 3000);
+            } else {
+                gapi.auth2.getAuthInstance().signOut();
+            }
         }
-    }
-
-    fetchAppStatus = async () => {
-        if(this.state.currentUser && this.state.currentUser.isSignedIn()) {
-            const response = await workLogger.post("/check", {
-                userEmail: this.state.currentUser.getBasicProfile().getEmail()
-            });
-            response.data ? this.setState({ inOffice: true, isLoading: false }) : this.setState({ inOffice: false, isLoading: false });
-        }
-    }
-
-    trackLogRequest = (success: boolean, inOffice: boolean | null, bannerMessage?: string) => {
-        const message = bannerMessage ? bannerMessage : "";
-        if(inOffice !== null) {
-            this.setState({ logStatus: true, success: success, inOffice: inOffice, bannerMessage: message });
-        } else {
-            this.setState({ logStatus: true, success: success, bannerMessage: message });
-        }
-        setTimeout(() => this.setState({ logStatus: false }), 3000);
-    }
-
-    renderContent = () => {
-        return (
-            <>
-                <StatusBanner 
-                    mounted={this.state.logStatus} 
-                    success={this.state.success}
-                    message={this.state.bannerMessage}
-                />
-                <WorkLoggerMenu 
-                    trackLogRequest={this.trackLogRequest} 
-                    isInOffice={this.state.inOffice} 
-                    currentUser={this.state.currentUser}
-                />
-            </>
-        );
     }
 
     render() {
-        if(this.state.isLoading) {
-            return <LoadingSpinner/>
+        const { state } = this;
+        if(state.isLoading) {
+            return <LoadingSpinner/>;
         }
-        return this.renderContent();
+        if(!validUser(this.currentUser!)) {
+            return (
+                <>
+                    <StatusBanner mounted={state.showBanner} success={false} message={this.bannerMessage}/>
+                    <GoogleAuth/>
+                </>
+            );
+        }
+        return <WorkLoggerMenu userEmail={state.userEmail}/>; 
     }
 }
 
