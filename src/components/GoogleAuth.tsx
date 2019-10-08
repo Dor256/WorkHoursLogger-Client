@@ -1,20 +1,17 @@
 import React from "react";
 import "./GoogleAuth.scss";
 
-class GoogleAuth extends React.Component {
+const GoogleAuth = () => {
 
-    handleSignIn = () => {
+    const handleSignIn = () => {
         gapi.auth2.getAuthInstance().signIn();
     }
 
-    render() {
-        return (
-            <div id="auth-button" onClick={this.handleSignIn}>
-                <img id="auth-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/>
-                <span id="auth-text">Log In With TechSee User</span>
-            </div>
-        );
-    } 
+    return (
+        <button className="btn btn-primary button" onClick={handleSignIn}>
+            Log In
+        </button>
+    );
 }
 
 export default GoogleAuth;

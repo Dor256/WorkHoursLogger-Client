@@ -57,6 +57,13 @@ class App extends React.Component<{}, State> {
         }
     }
 
+    renderBanner = (shouldRenderMenu: boolean) => {
+        if(!shouldRenderMenu) {
+            return <StatusBanner mounted={this.state.showBanner} success={false} message={this.bannerMessage}/>;
+        }
+        return null;
+    }
+
     renderWorkLoggerButtons = (props: ButtonProps) => {
         return (
             <>
@@ -68,22 +75,19 @@ class App extends React.Component<{}, State> {
     }
 
     render() {
-        const { state } = this;
+        const { state, renderWorkLoggerButtons, currentUser } = this;
         if(state.isLoading) {
             return <LoadingSpinner/>;
         }
-        if(!validUser(this.currentUser!)) {
-            return (
-                <>
-                    <StatusBanner mounted={state.showBanner} success={false} message={this.bannerMessage}/>
-                    <GoogleAuth/>
-                </>
-            );
-        }
+        const shouldRenderMenu = validUser(currentUser!);
+        const renderProps = shouldRenderMenu ? renderWorkLoggerButtons : GoogleAuth;
         return (
-            <WorkLoggerMenu userEmail={state.userEmail}>
-                {this.renderWorkLoggerButtons}
-            </WorkLoggerMenu>
+            <>
+                {this.renderBanner(shouldRenderMenu)}
+                <WorkLoggerMenu userEmail={state.userEmail} shouldRenderMenu={shouldRenderMenu}>
+                    {renderProps}
+                </WorkLoggerMenu>
+            </>
         );
     }
 }

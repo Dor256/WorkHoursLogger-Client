@@ -8,7 +8,8 @@ import Header from "./Header";
 
 type Props = {
     userEmail: string,
-    children(props: ButtonProps): JSX.Element
+    children(props?: ButtonProps): JSX.Element,
+    shouldRenderMenu: boolean
 }
 
 type State = {
@@ -23,10 +24,14 @@ class WorkLoggerMenu extends React.Component<Props, State> {
     state: State = { inOffice: false, showBanner: false, isLoading: true };
 
     componentDidMount = async () => {
-        const response = await workLogger.post("/check", {
-            userEmail: this.props.userEmail
-        });
-        this.setState({ inOffice: response.data, isLoading: false });
+        if(this.props.shouldRenderMenu) {
+            const response = await workLogger.post("/check", {
+                userEmail: this.props.userEmail
+            });
+            this.setState({ inOffice: response.data, isLoading: false });
+        } else {
+            this.setState({ isLoading: false });
+        }
     }
 
     trackLogRequest = (params: TrackLogRequestParams) => {
@@ -52,7 +57,7 @@ class WorkLoggerMenu extends React.Component<Props, State> {
                 <StatusBanner mounted={state.showBanner} success={success!} message={bannerMessage}/>
                 <div className="menu">
                     <Header text={"Work Logger"}/>
-                    {this.props.children({ ...buttonProps })}
+                    {props.children({ ...buttonProps })}
                 </div>
             </>
         );
