@@ -33,7 +33,7 @@ class App extends React.Component<{}, State> {
             const authInstance = gapi.auth2.getAuthInstance();
             this.currentUser = authInstance.currentUser.get();
             const basicUserProfile = this.currentUser.getBasicProfile();
-            authInstance.isSignedIn.listen(this.onSignIn);
+            authInstance.isSignedIn.listen(this.onAuthAction);
             const userEmail = basicUserProfile ? basicUserProfile.getEmail() : "";
             this.setState({ isLoading: false, userEmail: userEmail });
         } catch(err) {
@@ -43,7 +43,7 @@ class App extends React.Component<{}, State> {
         }
     }
 
-    onSignIn = (signedIn: boolean) => {
+    onAuthAction = (signedIn: boolean) => {
         if(signedIn && this.currentUser && validUser(this.currentUser)) {
             const userEmail = this.currentUser.getBasicProfile().getEmail();
             this.setState({ isLoading: false, userEmail: userEmail });
@@ -59,7 +59,13 @@ class App extends React.Component<{}, State> {
 
     renderBanner = (shouldRenderMenu: boolean) => {
         if(!shouldRenderMenu) {
-            return <StatusBanner mounted={this.state.showBanner} success={false} message={this.bannerMessage}/>;
+            return (
+                <StatusBanner 
+                    mounted={this.state.showBanner} 
+                    success={false} 
+                    message={this.bannerMessage}
+                />
+            );
         }
         return null;
     }
