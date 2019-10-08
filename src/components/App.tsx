@@ -6,6 +6,10 @@ import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 import LoadingSpinner from "./LoadingSpinner";
 import "./App.scss";
 import GoogleAuth from "./GoogleAuth";
+import { ButtonProps } from "../types/types";
+import EnterButton from "./menu/EnterButton";
+import ExitButton from "./menu/ExitButton";
+import SendLogButton from "./menu/SendLogButton";
 
 type State = {
     isLoading: boolean,
@@ -53,6 +57,16 @@ class App extends React.Component<{}, State> {
         }
     }
 
+    renderWorkLoggerButtons = (props: ButtonProps) => {
+        return (
+            <>
+                <EnterButton {...props}/>
+                <ExitButton {...props}/>
+                <SendLogButton {...props}/>
+            </>
+        );
+    }
+
     render() {
         const { state } = this;
         if(state.isLoading) {
@@ -66,7 +80,11 @@ class App extends React.Component<{}, State> {
                 </>
             );
         }
-        return <WorkLoggerMenu userEmail={state.userEmail}/>; 
+        return (
+            <WorkLoggerMenu userEmail={state.userEmail}>
+                {this.renderWorkLoggerButtons}
+            </WorkLoggerMenu>
+        );
     }
 }
 

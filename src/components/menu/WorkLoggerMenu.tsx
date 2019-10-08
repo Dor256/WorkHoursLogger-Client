@@ -1,19 +1,18 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
-import EnterButton from "./EnterButton";
-import ExitButton from "./ExitButton";
-import SendLogButton from "./SendLogButton";
 import StatusBanner from "../StatusBanner";
 import "./WorkLoggerMenu.scss";
-import { TrackLogRequestParams } from "../../types/types";
+import { TrackLogRequestParams, ButtonProps } from "../../types/types";
 import LoadingSpinner from "../LoadingSpinner";
+import Header from "./Header";
 
 type Props = {
-    userEmail: string
+    userEmail: string,
+    children(props: ButtonProps): JSX.Element
 }
 
 type State = {
-    inOffice: boolean | null,
+    inOffice: boolean,
     showBanner: boolean,
     isLoading: boolean
 }
@@ -21,7 +20,7 @@ type State = {
 class WorkLoggerMenu extends React.Component<Props, State> {
     private bannerMessage = "";
     private success: boolean | null = null;
-    state: State = { inOffice: null, showBanner: false, isLoading: true };
+    state: State = { inOffice: false, showBanner: false, isLoading: true };
 
     componentDidMount = async () => {
         const response = await workLogger.post("/check", {
@@ -42,30 +41,19 @@ class WorkLoggerMenu extends React.Component<Props, State> {
         setTimeout(() => this.setState({ showBanner: false }), 3000);
     }
 
-    renderMenu = () => {
-        const { props, state } = this;
-        if(state.inOffice !== null) {
-            return (
-                <div className="menu">
-                    <h1 className="heading">
-                        <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/> Work Logger
-                    </h1>
-                    <EnterButton trackLogRequest={this.trackLogRequest} inOffice={state.inOffice} userEmail={props.userEmail}/>
-                    <ExitButton trackLogRequest={this.trackLogRequest} inOffice={state.inOffice} userEmail={props.userEmail}/>
-                    <SendLogButton trackLogRequest={this.trackLogRequest} inOffice={state.inOffice} userEmail={props.userEmail}/>
-                </div>
-            );
-        }
-    }
-
     render() {
-        if(this.state.isLoading) {
+        const { state, props, success, bannerMessage, trackLogRequest} = this;
+        const buttonProps = { inOffice: state.inOffice, trackLogRequest, userEmail: props.userEmail}
+        if(state.isLoading) {
             return <LoadingSpinner/>;
         }
         return (
             <>
-                <StatusBanner mounted={this.state.showBanner} success={this.success!} message={this.bannerMessage}/>
-                {this.renderMenu()}
+                <StatusBanner mounted={state.showBanner} success={success!} message={bannerMessage}/>
+                <div className="menu">
+                    <Header text={"Work Logger"}/>
+                    {this.props.children({ ...buttonProps })}
+                </div>
             </>
         );
     } 

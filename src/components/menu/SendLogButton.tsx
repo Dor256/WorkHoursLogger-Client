@@ -1,14 +1,8 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
-import { TrackLogRequestParams } from "../../types/types";
+import { ButtonProps } from "../../types/types";
 
-type Props = {
-    trackLogRequest(params: TrackLogRequestParams): void,
-    inOffice: boolean,
-    userEmail: string
-}
-
-const SendLogButton = (props: Props) => {
+const SendLogButton = (props: ButtonProps) => {
     const handleClick = async () => {
         try {
             await workLogger.post("/send", {
