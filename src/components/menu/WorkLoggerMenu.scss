@@ -7,6 +7,14 @@ body {
     background: linear-gradient(121deg, rgba(4,96,149,1) 1%, rgba(103,170,214,1) 51%, rgba(7,98,156,1) 100%);
 }
 
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 25vh auto 15vh auto;
+    max-width: 20em;
+}
+
 .menu {
     display: flex;
     flex-direction: column;

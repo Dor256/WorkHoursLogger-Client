@@ -77,11 +77,15 @@ class App extends React.Component<{}, State> {
     render() {
         const { state, currentUser } = this;
         if(state.isLoading) {
-            return <LoadingSpinner/>;
+            return (
+                <Container className="app-container">
+                    <LoadingSpinner/>
+                </Container>
+            );
         }
         const shouldRenderMenu = validUser(currentUser!);
         return (
-            <Container className="menu">
+            <Container className="app-container menu">
                 <Header text="Work Logger"/>
                 {this.renderBanner(shouldRenderMenu)}
                 {this.renderContents(shouldRenderMenu)}
