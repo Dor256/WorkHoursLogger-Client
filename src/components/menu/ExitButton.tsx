@@ -1,9 +1,10 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
-import { ButtonProps } from "../../types/types";
+import { ButtonActionProps } from "../../types/types";
+import Button from "../basics/Button";
 
 
-const ExitButton = (props: ButtonProps) => {
+const ExitButton = (props: ButtonActionProps) => {
     const handleClick = async () => {
         try{
             if(props.inOffice) {
@@ -22,7 +23,7 @@ const ExitButton = (props: ButtonProps) => {
         }
     }
 
-    return <button className="btn btn-primary button" onClick={handleClick}>Exit</button>;
+    return <Button className="btn btn-primary button" onClick={handleClick} textContent="Exit"/>;
 }
 
 export default ExitButton;

@@ -1,9 +1,11 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
 import "./EnterButton.scss";
-import { ButtonProps } from "../../types/types";
+import { ButtonActionProps } from "../../types/types";
+import Button from "../basics/Button";
+import Container from "../basics/Container";
 
-const EnterButton = (props: ButtonProps) => {
+const EnterButton = (props: ButtonActionProps) => {
 
     const handleClick = async () => {
         try {
@@ -26,12 +28,20 @@ const EnterButton = (props: ButtonProps) => {
     const renderButton = () => {
         if(props.inOffice) {
             return (
-                <div className="entered-border">
-                    <button className="btn btn-primary button enter-button" onClick={handleClick}>Enter</button>
-                </div>
+                <Container className="entered-border">
+                    <Button 
+                        className="btn btn-primary button enter-button" 
+                        onClick={handleClick} 
+                        textContent="Enter"
+                    />;
+                </Container>
             );
         }
-        return <button className="btn btn-primary button" onClick={handleClick}>Enter</button>;
+        return <Button 
+                    className="btn btn-primary button" 
+                    onClick={handleClick} 
+                    textContent="Enter"
+                />;
     }
 
     return renderButton();

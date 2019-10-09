@@ -4,12 +4,10 @@ import clientId from "../api/OAuth";
 import StatusBanner from "./StatusBanner";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 import LoadingSpinner from "./LoadingSpinner";
-import "./App.scss";
 import GoogleAuth from "./GoogleAuth";
-import { ButtonProps } from "../types/types";
-import EnterButton from "./menu/EnterButton";
-import ExitButton from "./menu/ExitButton";
-import SendLogButton from "./menu/SendLogButton";
+import Container from "./basics/Container";
+import Header from "./menu/Header";
+import "./App.scss";
 
 type State = {
     isLoading: boolean,
@@ -67,33 +65,27 @@ class App extends React.Component<{}, State> {
                 />
             );
         }
-        return null;
     }
 
-    renderWorkLoggerButtons = (props: ButtonProps) => {
-        return (
-            <>
-                <EnterButton {...props}/>
-                <ExitButton {...props}/>
-                <SendLogButton {...props}/>
-            </>
-        );
+    renderContents = (shouldRenderMenu: boolean) => {
+        if(shouldRenderMenu) {
+            return <WorkLoggerMenu userEmail={this.state.userEmail}/>;
+        }
+        return <GoogleAuth/>;
     }
 
     render() {
-        const { state, renderWorkLoggerButtons, currentUser } = this;
+        const { state, currentUser } = this;
         if(state.isLoading) {
             return <LoadingSpinner/>;
         }
         const shouldRenderMenu = validUser(currentUser!);
-        const renderProps = shouldRenderMenu ? renderWorkLoggerButtons : GoogleAuth;
         return (
-            <>
+            <Container className="menu">
+                <Header text="Work Logger"/>
                 {this.renderBanner(shouldRenderMenu)}
-                <WorkLoggerMenu userEmail={state.userEmail} shouldRenderMenu={shouldRenderMenu}>
-                    {renderProps}
-                </WorkLoggerMenu>
-            </>
+                {this.renderContents(shouldRenderMenu)}
+            </Container>
         );
     }
 }

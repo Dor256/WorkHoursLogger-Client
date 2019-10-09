@@ -7,12 +7,19 @@ export type HeaderProps = {
     text: string
 }
 
-export type ButtonProps = {
+export type ButtonActionProps = {
     trackLogRequest(params: TrackLogRequestParams): void,
     inOffice: boolean,
     userEmail: string
 }
 
-export type ButtonGroupProps = {
-    children(props: ButtonProps): JSX.Element | null
+export type  ButtonProps = {
+    className: string,
+    textContent: string,
+    onClick(): void
+}
+
+export type ContainerProps = {
+    className: string,
+    children?: React.ReactNode
 }

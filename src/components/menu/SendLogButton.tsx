@@ -1,8 +1,9 @@
 import React from "react";
 import workLogger from "../../api/workLogger";
-import { ButtonProps } from "../../types/types";
+import { ButtonActionProps } from "../../types/types";
+import Button from "../basics/Button";
 
-const SendLogButton = (props: ButtonProps) => {
+const SendLogButton = (props: ButtonActionProps) => {
     const handleClick = async () => {
         try {
             await workLogger.post("/send", {
@@ -19,7 +20,7 @@ const SendLogButton = (props: ButtonProps) => {
         }
     }
 
-    return <button className="btn btn-primary button" onClick={handleClick}>Send Log</button>;
+    return <Button className="btn btn-primary button" onClick={handleClick} textContent="Send Log"/>;
 }
 
 export default SendLogButton;

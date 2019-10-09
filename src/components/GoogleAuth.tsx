@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "./basics/Button"
 import "./GoogleAuth.scss";
 
 const GoogleAuth = () => {
@@ -7,11 +8,11 @@ const GoogleAuth = () => {
         gapi.auth2.getAuthInstance().signIn();
     }
 
-    return (
-        <button className="btn btn-primary button" onClick={handleSignIn}>
-            Log In
-        </button>
-    );
+    return <Button 
+                className="btn btn-primary button" 
+                onClick={handleSignIn} 
+                textContent="Log In"
+            />;
 }
 
 export default GoogleAuth;
