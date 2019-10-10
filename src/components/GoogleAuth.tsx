@@ -8,11 +8,14 @@ const GoogleAuth = () => {
         gapi.auth2.getAuthInstance().signIn();
     }
 
-    return <Button 
-                className="btn btn-primary button" 
-                onClick={handleSignIn} 
-                textContent="Log In"
-            />;
+    return (
+        <Button 
+            className="btn btn-primary button" 
+            onClick={handleSignIn} 
+        >
+            Log In
+        </Button>
+    );
 }
 
 export default GoogleAuth;

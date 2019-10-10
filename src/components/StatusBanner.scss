@@ -2,32 +2,12 @@
     text-align: center;
     position: absolute;
     width: 100%;
-    top: 0;
-    visibility: hidden;
-}
 
-.alert.movedown {
-    animation: moveDown 500ms linear forwards;
-    visibility: visible;
-    transition: 500ms visibility;
-}
+    top: -20%;
+    opacity: 0;
 
-@keyframes moveDown {
-    0% {
-        top: -20%;
-    }
-    100% {
+    &.visible {
+        opacity: 1;
         top: 0;
     }
-}
-
-.alert.fade-exit {
-    opacity: 1;
-    visibility: visible;
-}
-
-.alert.fade-exit-active {
-    opacity: 0.01;
-    visibility: hidden;
-    transition: opacity 1000ms, visibility 1000ms;
 }

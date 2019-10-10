@@ -1,9 +1,14 @@
 import React from "react";
-import { ButtonProps } from "../../types/types";
+
+export type  ButtonProps = {
+    className: string,
+    children?: string | JSX.Element,
+    onClick(): void
+}
 
 const Button = (props: ButtonProps) => {
-    const { className, textContent, onClick } = props;
-    return <button className={className} onClick={onClick}>{textContent}</button>;
+    const { className, children, onClick } = props;
+    return <button className={className} onClick={onClick}>{children}</button>;
 }
 
 export default Button;
