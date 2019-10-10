@@ -1,25 +1,32 @@
 import React from "react";
 import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
-import StatusBanner from "./StatusBanner";
-import WorkLoggerMenu from "./menu/WorkLoggerMenu";
+import workLogger from "../../api/workLogger";
+import {StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
 import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
 import Header from "./menu/Header";
 import "./App.scss";
+import Button from "./basics/Button";
+import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 
 type State = {
     isLoading: boolean,
-    showBanner: boolean,
+    bannerMessage?: BannerMessage,
     userEmail: string,
+    inOffice: boolean,
+    user?: GoogleUser
 }
 
+const BANNER_CLOSE_DELAY = 3000;
 
 class App extends React.Component<{}, State> {
-    state: State = { isLoading: true, showBanner: false, userEmail: "" };
-    private bannerMessage = "You need a TechSee email to use this app";
-    private currentUser?: GoogleUser;
+    state: State = {
+        isLoading: true,
+        userEmail: "",
+        inOffice: false
+    };
 
     componentDidMount = () => {
         gapi.load("auth2:client", this.onAuthLoad);
@@ -29,11 +36,20 @@ class App extends React.Component<{}, State> {
         try {
             await gapi.client.init({ clientId: clientId, scope: "email" });
             const authInstance = gapi.auth2.getAuthInstance();
-            this.currentUser = authInstance.currentUser.get();
-            const basicUserProfile = this.currentUser.getBasicProfile();
-            authInstance.isSignedIn.listen(this.onAuthAction);
-            const userEmail = basicUserProfile ? basicUserProfile.getEmail() : "";
-            this.setState({ isLoading: false, userEmail: userEmail });
+            const user = authInstance.currentUser.get();
+            const basicUserProfile = user.getBasicProfile();
+            authInstance.isSignedIn.listen(this.onAuthAction(user));
+            const userEmail = basicUserProfile.getEmail();
+            workLogger.post("/check", {
+                userEmail
+            }).then((res: {data: boolean}) => {
+                this.setState({
+                    inOffice: res.data,
+                    isLoading: false,
+                    userEmail,
+                    user
+                })
+            });
         } catch(err) {
             if(isUsingSafari) {
                 alert("There is a bug with Safari, please clear your cache and try again in 5 minutes or open in private mode");
@@ -41,41 +57,102 @@ class App extends React.Component<{}, State> {
         }
     }
 
-    onAuthAction = (signedIn: boolean) => {
-        if(signedIn && this.currentUser && validUser(this.currentUser)) {
-            const userEmail = this.currentUser.getBasicProfile().getEmail();
-            this.setState({ isLoading: false, userEmail: userEmail });
-        } else if(!this.currentUser || !validUser(this.currentUser)) {
-            if(!signedIn) {
-                this.setState({ showBanner: true })
-                setTimeout(() => this.setState({ showBanner: false }), 3000);
-            } else {
+    hideBanner = () => {
+        this.setState({
+            bannerMessage: undefined
+        })
+    }
+
+    showBanner = (message: string, type: BootstrapAlertClass = 'alert-success', hideDelay: number = BANNER_CLOSE_DELAY) => {
+        this.setState({
+            bannerMessage: {
+                message,
+                type,
+            }
+        });
+
+        setTimeout(() => {
+            const bannerMessageChanged = !this.state.bannerMessage || this.state.bannerMessage.message !== message || this.state.bannerMessage.type !== type;
+            if (!bannerMessageChanged) {
+                this.hideBanner();
+            }
+        }, hideDelay);
+    }
+
+    onAuthAction = (currentUser: GoogleUser) => (signedIn: boolean) => {
+        const userValid = validUser(currentUser);
+        if (signedIn && userValid) {
+            const userEmail = currentUser.getBasicProfile().getEmail();
+            this.setState({ isLoading: false, userEmail });
+        } else if (!userValid) {
+            if (signedIn) {
                 gapi.auth2.getAuthInstance().signOut();
+            } else {
+                this.showBanner("You need a TechSee email to use this app", 'alert-danger');
             }
         }
     }
 
-    renderBanner = (shouldRenderMenu: boolean) => {
-        if(!shouldRenderMenu) {
-            return (
-                <StatusBanner 
-                    mounted={this.state.showBanner} 
-                    success={false} 
-                    message={this.bannerMessage}
-                />
-            );
+    onEmployeeEnter = async () => {
+        const {inOffice, userEmail} = this.state;
+        try {
+            if(!inOffice) {
+                await workLogger.post("/log", {
+                    dateString: new Date().toString(),
+                    userEmail
+                });
+                this.setState({
+                    inOffice: true
+                });
+                this.showBanner("Swiped in successfuly");
+            } else {
+                this.showBanner("Tried to swipe in while already swiped");
+            }
+        } catch(err) {
+            this.showBanner("Failed to swipe in", 'alert-danger');
+            console.error(err);
         }
     }
 
-    renderContents = (shouldRenderMenu: boolean) => {
-        if(shouldRenderMenu) {
-            return <WorkLoggerMenu userEmail={this.state.userEmail}/>;
+    onEmployeeLeave = async () => {
+        const {inOffice, userEmail} = this.state;
+        try{
+            if(inOffice) {
+                await workLogger.put("/log", {
+                    dateString: new Date().toString(),
+                    userEmail
+                });
+                this.setState({
+                    inOffice: false
+                })
+                this.showBanner('Swiped out successfuly');
+            } else {
+                this.showBanner("Can't exit without entering");
+            }
+        } catch(err) {
+            if(err.message === "Network Error") {
+                this.showBanner("Failed to swipe out", 'alert-danger');
+                console.error(err);
+            }
         }
-        return <GoogleAuth/>;
+    }
+
+    onRequestLog = async () => {
+        const {userEmail} = this.state;
+        try {
+            await workLogger.post("/send", {
+                dateString: new Date().toString(),
+                userEmail
+            });
+            this.showBanner('Log sent successfuly')
+        } catch(err) {
+            this.showBanner("Failed to send log", 'alert-danger');
+            console.error(err);
+        }
     }
 
     render() {
-        const { state, currentUser } = this;
+        const { state } = this;
         if(state.isLoading) {
             return (
                 <Container className="app-container">
@@ -83,12 +160,21 @@ class App extends React.Component<{}, State> {
                 </Container>
             );
         }
-        const shouldRenderMenu = validUser(currentUser!);
+
+        if (!(state.user && validUser(state.user))) {
+            return <GoogleAuth/>;
+        }
+
         return (
             <Container className="app-container menu">
-                <Header text="Work Logger"/>
-                {this.renderBanner(shouldRenderMenu)}
-                {this.renderContents(shouldRenderMenu)}
+                <StatusBanner bannerMessage={this.state.bannerMessage}/>
+                <Header>Work Logger</Header>
+                <WorkLoggerMenu
+                    onEmployeeEnter={this.onEmployeeEnter}
+                    onEmployeeLeave={this.onEmployeeLeave}
+                    onRequestLog={this.onRequestLog}
+                    inOffice={this.state.inOffice}
+                />
             </Container>
         );
     }

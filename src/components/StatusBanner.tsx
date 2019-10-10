@@ -1,31 +1,59 @@
 import React from "react";
-import { CSSTransition } from "react-transition-group";
 import "./StatusBanner.scss";
 
-type Props = {
-    mounted: boolean,
-    success: boolean,
-    message: string
+export type BootstrapAlertClass = 'alert-success' | 'alert-danger';
+
+export type BannerMessage = {
+    message: string;
+    type: BootstrapAlertClass;
 }
 
-const SuccessBanner = (props: Props) => {
-    const hideClass = props.mounted ? "movedown" : null;
-    const bannerTypeClass = props.success ? "alert-success" : "alert-danger";
+type StatusBannerProps = {
+    bannerMessage?: BannerMessage;
+}
 
-    const getBannerMessage = (): string => {
-            if(props.success) {
-                return "Success!";
-            }
-            return props.message;
+type StatusBannerState = {
+    visible: boolean;
+    tempBannerMessage?: BannerMessage;
+}
+
+const OPACITY_TRANSITION_DELAY_MS = 1000;
+
+export class StatusBanner extends React.Component<StatusBannerProps, StatusBannerState> {
+    state: StatusBannerState = {
+        visible: false
+    }
+
+    hideBanner = () => {
+        this.setState({
+            visible: false,
+            tempBannerMessage: this.props.bannerMessage
+        });
+        setTimeout(() => {
+            this.setState({
+                tempBannerMessage: undefined
+            });
+        }, 1000);
+    }
+
+    componentWillReceiveProps (nextProps: StatusBannerProps) {
+        if (this.state.visible && !nextProps.bannerMessage) {
+            this.hideBanner();
+        } else if (!this.state.visible && nextProps.bannerMessage) {
+            this.setState({
+                visible: true
+            });
         }
- 
-    return (
-        <CSSTransition in={props.mounted} timeout={1000} classNames="fade">
-            <div className={`alert ${bannerTypeClass} ${hideClass}`} role="alert">
-                {getBannerMessage()}
-            </div>
-        </CSSTransition>
-    );
-}
+    }
 
-export default SuccessBanner;
+    render () {
+        const {visible, tempBannerMessage} = this.state;
+        const {message='', type=''} = this.props.bannerMessage || tempBannerMessage || {};
+ 
+        return (
+            <div className={`alert ${type}${visible ? " visible" : ''}`} style={{transition: `opacity ${OPACITY_TRANSITION_DELAY_MS}ms, top .5s`}} role="alert">
+                {message}
+            </div>
+        );
+    }
+}

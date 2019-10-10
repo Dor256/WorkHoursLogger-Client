@@ -1,59 +1,28 @@
 import React from "react";
-import workLogger from "../../api/workLogger";
-import StatusBanner from "../StatusBanner";
 import "./WorkLoggerMenu.scss";
-import { TrackLogRequestParams } from "../../types/types";
-import LoadingSpinner from "../LoadingSpinner";
 import EnterButton from "./EnterButton";
-import ExitButton from "./ExitButton";
-import SendLogButton from "./SendLogButton";
+import Button from "../basics/Button";
 
 type Props = {
-    userEmail: string
+    inOffice: boolean;
+    onEmployeeEnter: () => void;
+    onEmployeeLeave: () => void;
+    onRequestLog: () => void;
 }
 
 type State = {
-    inOffice?: boolean,
-    showBanner: boolean,
-    isLoading: boolean
 }
 
 class WorkLoggerMenu extends React.Component<Props, State> {
-    private bannerMessage = "";
-    private success: boolean | null = null;
-    state: State = { showBanner: false, isLoading: true };
-
-    componentDidMount = async () => {
-        const response = await workLogger.post("/check", {
-            userEmail: this.props.userEmail
-        });
-        this.setState({ inOffice: response.data, isLoading: false });
-    }
-
-    trackLogRequest = (params: TrackLogRequestParams) => {
-        const { success, inOffice, bannerMessage } = params;
-        this.bannerMessage = bannerMessage ? bannerMessage : "";
-        this.success = success;
-        if(inOffice !== undefined) {
-            this.setState({ showBanner: true, inOffice: inOffice });
-        } else {
-            this.setState({ showBanner: true });
-        }
-        setTimeout(() => this.setState({ showBanner: false }), 3000);
-    }
+    state = {};
 
     render() {
-        const { state, props, success, bannerMessage, trackLogRequest} = this;
-        const buttonProps = { inOffice: state.inOffice!, trackLogRequest, userEmail: props.userEmail}
-        if(state.isLoading) {
-            return <LoadingSpinner/>;
-        }
+        const { props } = this;
         return (
             <>
-                <StatusBanner mounted={state.showBanner} success={success!} message={bannerMessage}/>
-                <EnterButton {...buttonProps}/>
-                <ExitButton {...buttonProps}/>
-                <SendLogButton {...buttonProps}/>
+                <EnterButton onClick={props.onEmployeeEnter} inOffice={props.inOffice}/>
+                <Button className="btn btn-primary button" onClick={props.onEmployeeLeave}>Exit</Button>
+                <Button className="btn btn-primary button" onClick={props.onRequestLog}>Send Log</Button>
             </>
         );
     } 

@@ -1,5 +1,9 @@
 import React from "react";
-import { ContainerProps } from "../../types/types";
+
+export type ContainerProps = {
+    className: string;
+    children?: string | JSX.Element | JSX.Element[];
+}
 
 const Container = (props: ContainerProps) => {
     const { className, children } = props;
