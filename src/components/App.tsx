@@ -1,14 +1,13 @@
 import React from "react";
 import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
-import workLogger from "../../api/workLogger";
+import workLogger from "../api/workLogger";
 import {StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
 import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
 import Header from "./menu/Header";
 import "./App.scss";
-import Button from "./basics/Button";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 
 type State = {
