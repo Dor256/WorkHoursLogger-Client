@@ -1,14 +1,16 @@
 import React from "react";
-import { validUser, isUsingSafari } from "../utils";
+import { validUser, isUsingSafari, getHelloMessage } from "../utils";
 import clientId from "../api/OAuth";
 import workLogger from "../api/workLogger";
 import {StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
 import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
-import Header from "./menu/Header";
-import "./App.scss";
+import Header from "./basics/Header";
+import MenuHeader from "./basics/MenuHeader";
+import Image from "../components/basics/Image";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
+import "./App.scss";
 
 type State = {
     isLoading: boolean,
@@ -38,6 +40,7 @@ class App extends React.Component<{}, State> {
             const user = authInstance.currentUser.get();
             const basicUserProfile = user.getBasicProfile();
             authInstance.isSignedIn.listen(this.onAuthAction(user));
+            this.setState({ isLoading: false });
             const userEmail = basicUserProfile.getEmail();
             workLogger.post("/check", {
                 userEmail
@@ -82,7 +85,7 @@ class App extends React.Component<{}, State> {
         const userValid = validUser(currentUser);
         if (signedIn && userValid) {
             const userEmail = currentUser.getBasicProfile().getEmail();
-            this.setState({ isLoading: false, userEmail });
+            this.setState({ isLoading: false, userEmail, user: currentUser });
         } else if (!userValid) {
             if (signedIn) {
                 gapi.auth2.getAuthInstance().signOut();
@@ -161,20 +164,30 @@ class App extends React.Component<{}, State> {
         }
 
         if (!(state.user && validUser(state.user))) {
-            return <GoogleAuth/>;
+            return (
+                <Container className="app-container menu auth">
+                    <MenuHeader/>
+                    <GoogleAuth/>
+                </Container>
+            );
         }
-
         return (
-            <Container className="app-container menu">
-                <StatusBanner bannerMessage={this.state.bannerMessage}/>
-                <Header>Work Logger</Header>
-                <WorkLoggerMenu
-                    onEmployeeEnter={this.onEmployeeEnter}
-                    onEmployeeLeave={this.onEmployeeLeave}
-                    onRequestLog={this.onRequestLog}
-                    inOffice={this.state.inOffice}
-                />
-            </Container>
+            <>
+                <Header className="welcome-heading">
+                    <Image className="user-icon" src={state.user.getBasicProfile().getImageUrl()}/> 
+                    {getHelloMessage(state.user.getBasicProfile().getName())}
+                </Header>
+                <Container className="app-container menu">
+                    <StatusBanner bannerMessage={this.state.bannerMessage}/>
+                    <MenuHeader/>
+                    <WorkLoggerMenu
+                        onEmployeeEnter={this.onEmployeeEnter}
+                        onEmployeeLeave={this.onEmployeeLeave}
+                        onRequestLog={this.onRequestLog}
+                        inOffice={this.state.inOffice}
+                    />
+                </Container>
+            </>
         );
     }
 }

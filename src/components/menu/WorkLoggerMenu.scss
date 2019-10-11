@@ -20,10 +20,14 @@ body {
     flex-direction: column;
     align-items: center;
     border: 3px solid rgb(9, 118, 241);
-    margin: 25vh auto 15vh auto;
+    margin: 5vh auto 15vh auto;
     max-width: 20em;
     border-radius: 15px;
     background-color: rgba(181, 196, 212, 0.74);
+}
+
+.auth {
+    margin: 36vh auto 15vh auto;
 }
 
 .button {

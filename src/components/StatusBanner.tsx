@@ -36,7 +36,7 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         }, 1000);
     }
 
-    componentWillReceiveProps (nextProps: StatusBannerProps) {
+    componentWillReceiveProps(nextProps: StatusBannerProps) {
         if (this.state.visible && !nextProps.bannerMessage) {
             this.hideBanner();
         } else if (!this.state.visible && nextProps.bannerMessage) {

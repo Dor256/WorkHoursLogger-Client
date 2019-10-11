@@ -2,13 +2,13 @@ import React from "react";
 import "./Header.scss";
 
 export type HeaderProps = {
-    children?: string | JSX.Element;
+    className: string,
+    children?: string | JSX.Element | React.ReactNode[];
 }
 
 const Header = (props: HeaderProps) => {
     return ( 
-        <h1 className="heading">
-            <img className="techsee-icon" src={`${process.env.PUBLIC_URL}/icon.png`} alt=""/>
+        <h1 className={props.className}>
             {props.children}
         </h1>
     );
