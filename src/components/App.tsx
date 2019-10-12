@@ -40,7 +40,9 @@ class App extends React.Component<{}, State> {
             const user = authInstance.currentUser.get();
             const basicUserProfile = user.getBasicProfile();
             authInstance.isSignedIn.listen(this.onAuthAction(user));
-            this.setState({ isLoading: false });
+            if(!user.getBasicProfile()) {
+                this.setState({ isLoading: false });
+            }
             const userEmail = basicUserProfile.getEmail();
             workLogger.post("/check", {
                 userEmail

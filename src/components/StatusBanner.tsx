@@ -19,6 +19,10 @@ type StatusBannerState = {
 
 const OPACITY_TRANSITION_DELAY_MS = 1000;
 
+const bannerStyle = {
+    transition: `opacity ${OPACITY_TRANSITION_DELAY_MS}ms, .5s top`
+}
+
 export class StatusBanner extends React.Component<StatusBannerProps, StatusBannerState> {
     state: StatusBannerState = {
         visible: false
@@ -51,7 +55,7 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         const {message='', type=''} = this.props.bannerMessage || tempBannerMessage || {};
  
         return (
-            <div className={`alert ${type}${visible ? " visible" : ''}`} style={{transition: `opacity ${OPACITY_TRANSITION_DELAY_MS}ms, top .5s`}} role="alert">
+            <div className={`alert ${type}${visible ? " visible" : ''}`} style={bannerStyle} role="alert">
                 {message}
             </div>
         );

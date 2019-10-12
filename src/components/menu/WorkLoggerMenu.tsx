@@ -10,10 +10,7 @@ type Props = {
     onRequestLog: () => void;
 }
 
-type State = {
-}
-
-class WorkLoggerMenu extends React.Component<Props, State> {
+class WorkLoggerMenu extends React.Component<Props> {
     state = {};
 
     render() {
