@@ -3,13 +3,13 @@ import Header from "./basics/Header";
 
 type HelloMessageProps = {
     userName: string,
+    currentHour: number
 }
 
 const HelloMessage = (props: HelloMessageProps) => {
-    const {userName} = props;
+    const {userName, currentHour} = props;
 
-    const getMessageText = (userName: string): string => {
-        const currentHour = new Date().getHours();
+    const getMessageText = (): string => {
         if(currentHour < 12 && currentHour > 0) {
             return `Good Morning, ${userName}`;
         } else if(currentHour >= 12 && currentHour < 18) {
@@ -20,7 +20,7 @@ const HelloMessage = (props: HelloMessageProps) => {
 
     return (
         <Header className="heading welcome-heading">
-            {getMessageText(userName)}
+            {getMessageText()}
         </Header>
     );
 }

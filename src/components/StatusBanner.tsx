@@ -1,7 +1,7 @@
 import React from "react";
 import "./StatusBanner.scss";
 
-export type BootstrapAlertClass = 'alert-success' | 'alert-danger';
+export type BootstrapAlertClass = ' alert-success' | ' alert-danger';
 
 export type BannerMessage = {
     message: string;
@@ -22,10 +22,10 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         visible: ""
     }
 
-    hideBanner = () => {
+    hideBanner = (prevMessage?: BannerMessage) => {
         this.setState({
-            visible: "hidden",
-            tempBannerMessage: this.props.bannerMessage
+            visible: "visible hiding",
+            tempBannerMessage: prevMessage
         });
         setTimeout(() => {
             this.setState({
@@ -35,10 +35,13 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         }, 1000);
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps: StatusBannerProps) {
-        if (!nextProps.bannerMessage) {
-            this.hideBanner();
-        } else if (nextProps.bannerMessage) {
+    componentDidUpdate(prevProps: StatusBannerProps) {
+        if(this.props.bannerMessage === prevProps.bannerMessage) {
+            return;
+        }
+        if (!this.props.bannerMessage) {
+            this.hideBanner(prevProps.bannerMessage);
+        } else if (this.props.bannerMessage) {
             this.setState({
                 visible: "visible"
             });
@@ -50,7 +53,7 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         const {message='', type=''} = this.props.bannerMessage || tempBannerMessage || {};
  
         return (
-            <div className={`alert ${type} ${visible}`} role="alert">
+            <div className={`alert${type} ${visible}`} role="alert">
                 {message}
             </div>
         );

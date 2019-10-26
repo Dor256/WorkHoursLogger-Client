@@ -1,8 +1,10 @@
 .button.enter-button {
-    position: relative;
+    // position: relative;
     width: 96%;
-    margin-top: 2.2%;
-    margin-left: 2.1%;
+    // margin-top: 10%;
+    // margin-top: .7rem;
+    // margin-left: 2.1%;
+    margin: 0;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
     border-radius: 30px;
     color: white;
@@ -13,6 +15,10 @@
 }
 
 .entered-border {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: space-between;
     text-align: center;
     border-radius: 30px;
     margin-left: 19%;
@@ -20,8 +26,8 @@
     margin-bottom: 2%;
 	overflow: hidden;
     border-radius: 30px;
-	width: 47%;
-    height: 3.8rem;
+	width: 9.2rem;
+    height: 3.7rem;
 	background: repeating-linear-gradient(
 			rgb(26, 179, 46) 0%,
             rgb(26, 179, 46) 20px,
@@ -37,16 +43,10 @@
 
 @keyframes animateBorder {
 	from {
-		background-position: 0 22px;
+		background-position: 0 38px;
 	}
 
 	to {
 		background-position: 0 450px;
 	}
-}
-
-@media only screen and (max-width: 1024px) {
-    .button.enter-button {
-        margin-top: 2.1%;
-    }
 }

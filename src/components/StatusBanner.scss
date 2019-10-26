@@ -6,14 +6,13 @@
     opacity: 0;
 
     &.visible {
-        transition: .5s top;
         top: 0;
         opacity: 1;
-    }
+        transition: .5s top;
 
-    &.hidden {
-        transition: 1s opacity;
-        top: 0;
-        opacity: 0;
+        &.hiding {
+            transition: 1s opacity;
+            opacity: 0;
+        }
     }
 }

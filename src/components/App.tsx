@@ -2,7 +2,7 @@ import React from "react";
 import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
 import workLogger from "../api/workLogger";
-import {StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
+import { StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
 import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
@@ -66,7 +66,7 @@ class App extends React.Component<{}, State> {
         })
     }
 
-    showBanner = (message: string, type: BootstrapAlertClass = 'alert-success', hideDelay: number = BANNER_CLOSE_DELAY) => {
+    showBanner = (message: string, type: BootstrapAlertClass = ' alert-success', hideDelay: number = BANNER_CLOSE_DELAY) => {
         this.setState({
             bannerMessage: {
                 message,
@@ -91,7 +91,7 @@ class App extends React.Component<{}, State> {
             if (signedIn) {
                 gapi.auth2.getAuthInstance().signOut();
             } else {
-                this.showBanner("You need a TechSee email to use this app", 'alert-danger');
+                this.showBanner("You need a TechSee email to use this app", ' alert-danger');
             }
         }
     }
@@ -109,10 +109,10 @@ class App extends React.Component<{}, State> {
                 });
                 this.showBanner("Swiped in successfuly");
             } else {
-                this.showBanner("Tried to swipe in while already swiped", 'alert-danger');
+                this.showBanner("Tried to swipe in while already swiped", ' alert-danger');
             }
         } catch(err) {
-            this.showBanner("Failed to swipe in", 'alert-danger');
+            this.showBanner("Failed to swipe in", ' alert-danger');
             console.error(err);
         }
     }
@@ -130,11 +130,11 @@ class App extends React.Component<{}, State> {
                 })
                 this.showBanner('Swiped out successfuly');
             } else {
-                this.showBanner("Can't exit without entering", 'alert-danger');
+                this.showBanner("Can't exit without entering", ' alert-danger');
             }
         } catch(err) {
             if(err.message === "Network Error") {
-                this.showBanner("Failed to swipe out", 'alert-danger');
+                this.showBanner("Failed to swipe out", ' alert-danger');
                 console.error(err);
             }
         }
@@ -149,7 +149,7 @@ class App extends React.Component<{}, State> {
             });
             this.showBanner('Log sent successfuly')
         } catch(err) {
-            this.showBanner("Failed to send log", 'alert-danger');
+            this.showBanner("Failed to send log", ' alert-danger');
             console.error(err);
         }
     }
@@ -174,7 +174,10 @@ class App extends React.Component<{}, State> {
         }
         return (
             <>
-                <HelloMessage userName={state.user.getBasicProfile().getName()}/>
+                <HelloMessage 
+                    userName={state.user.getBasicProfile().getName()}
+                    currentHour={new Date().getHours()}
+                />
                 <Container className="app-container menu">
                     <StatusBanner bannerMessage={this.state.bannerMessage}/>
                     <MenuHeader/>
