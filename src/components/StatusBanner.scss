@@ -1,11 +1,19 @@
 .alert {
-    text-align: center;
     position: absolute;
+    text-align: center;
     width: 100%;
     top: -20%;
-    opacity: 1;
+    opacity: 0;
 
     &.visible {
+        transition: .5s top;
         top: 0;
+        opacity: 1;
+    }
+
+    &.hidden {
+        transition: 1s opacity;
+        top: 0;
+        opacity: 0;
     }
 }

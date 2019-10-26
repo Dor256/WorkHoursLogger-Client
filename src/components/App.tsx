@@ -1,16 +1,15 @@
 import React from "react";
-import { validUser, isUsingSafari, getHelloMessage } from "../utils";
+import { validUser, isUsingSafari } from "../utils";
 import clientId from "../api/OAuth";
 import workLogger from "../api/workLogger";
 import {StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
 import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
-import Header from "./basics/Header";
 import MenuHeader from "./basics/MenuHeader";
-import Image from "../components/basics/Image";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 import "./App.scss";
+import HelloMessage from "./HelloMessage";
 
 type State = {
     isLoading: boolean,
@@ -110,7 +109,7 @@ class App extends React.Component<{}, State> {
                 });
                 this.showBanner("Swiped in successfuly");
             } else {
-                this.showBanner("Tried to swipe in while already swiped");
+                this.showBanner("Tried to swipe in while already swiped", 'alert-danger');
             }
         } catch(err) {
             this.showBanner("Failed to swipe in", 'alert-danger');
@@ -131,7 +130,7 @@ class App extends React.Component<{}, State> {
                 })
                 this.showBanner('Swiped out successfuly');
             } else {
-                this.showBanner("Can't exit without entering");
+                this.showBanner("Can't exit without entering", 'alert-danger');
             }
         } catch(err) {
             if(err.message === "Network Error") {
@@ -175,10 +174,11 @@ class App extends React.Component<{}, State> {
         }
         return (
             <>
-                <Header className="welcome-heading">
+                <HelloMessage userName={state.user.getBasicProfile().getName()}/>
+                {/* <Header className="welcome-heading">
                     <Image className="user-icon" src={state.user.getBasicProfile().getImageUrl()}/> 
                     {getHelloMessage(state.user.getBasicProfile().getName())}
-                </Header>
+                </Header> */}
                 <Container className="app-container menu">
                     <StatusBanner bannerMessage={this.state.bannerMessage}/>
                     <MenuHeader/>

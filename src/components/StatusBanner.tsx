@@ -13,39 +13,34 @@ type StatusBannerProps = {
 }
 
 type StatusBannerState = {
-    visible: boolean;
+    visible: string;
     tempBannerMessage?: BannerMessage;
-}
-
-const OPACITY_TRANSITION_DELAY_MS = 1000;
-
-const bannerStyle = {
-    transition: `opacity ${OPACITY_TRANSITION_DELAY_MS}ms, .5s top`
 }
 
 export class StatusBanner extends React.Component<StatusBannerProps, StatusBannerState> {
     state: StatusBannerState = {
-        visible: false
+        visible: ""
     }
 
     hideBanner = () => {
         this.setState({
-            visible: false,
+            visible: "hidden",
             tempBannerMessage: this.props.bannerMessage
         });
         setTimeout(() => {
             this.setState({
-                tempBannerMessage: undefined
+                tempBannerMessage: undefined,
+                visible: ""
             });
         }, 1000);
     }
 
-    componentWillReceiveProps(nextProps: StatusBannerProps) {
-        if (this.state.visible && !nextProps.bannerMessage) {
+    UNSAFE_componentWillReceiveProps(nextProps: StatusBannerProps) {
+        if (!nextProps.bannerMessage) {
             this.hideBanner();
-        } else if (!this.state.visible && nextProps.bannerMessage) {
+        } else if (nextProps.bannerMessage) {
             this.setState({
-                visible: true
+                visible: "visible"
             });
         }
     }
@@ -55,7 +50,7 @@ export class StatusBanner extends React.Component<StatusBannerProps, StatusBanne
         const {message='', type=''} = this.props.bannerMessage || tempBannerMessage || {};
  
         return (
-            <div className={`alert ${type}${visible ? " visible" : ''}`} style={bannerStyle} role="alert">
+            <div className={`alert ${type} ${visible}`} role="alert">
                 {message}
             </div>
         );
