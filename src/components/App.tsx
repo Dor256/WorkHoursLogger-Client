@@ -175,10 +175,6 @@ class App extends React.Component<{}, State> {
         return (
             <>
                 <HelloMessage userName={state.user.getBasicProfile().getName()}/>
-                {/* <Header className="welcome-heading">
-                    <Image className="user-icon" src={state.user.getBasicProfile().getImageUrl()}/> 
-                    {getHelloMessage(state.user.getBasicProfile().getName())}
-                </Header> */}
                 <Container className="app-container menu">
                     <StatusBanner bannerMessage={this.state.bannerMessage}/>
                     <MenuHeader/>
