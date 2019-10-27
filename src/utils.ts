@@ -9,3 +9,5 @@ export const validUser = (user: GoogleUser): boolean => {
 const userAgent = window.navigator.userAgent;
 
 export const isUsingSafari = userAgent.indexOf("Chrome") === -1 && userAgent.indexOf("Safari") > -1;
+
+export const inProduction = process.env.NODE_ENV === "production";

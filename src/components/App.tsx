@@ -1,5 +1,5 @@
 import React from "react";
-import { validUser, isUsingSafari } from "../utils";
+import { validUser, isUsingSafari, inProduction } from "../utils";
 import clientId from "../api/OAuth";
 import workLogger from "../api/workLogger";
 import { StatusBanner, BannerMessage, BootstrapAlertClass } from "./StatusBanner";
@@ -9,7 +9,7 @@ import Container from "./basics/Container";
 import MenuHeader from "./basics/MenuHeader";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
 import "./App.scss";
-import HelloMessage from "./HelloMessage";
+import GreetingMessage from "./GreetingMessage";
 
 type State = {
     isLoading: boolean,
@@ -100,10 +100,12 @@ class App extends React.Component<{}, State> {
         const {inOffice, userEmail} = this.state;
         try {
             if(!inOffice) {
-                await workLogger.post("/log", {
-                    dateString: new Date().toString(),
-                    userEmail
-                });
+                if(inProduction) {
+                    await workLogger.post("/log", {
+                        dateString: new Date().toString(),
+                        userEmail
+                    });
+                }
                 this.setState({
                     inOffice: true
                 });
@@ -121,10 +123,12 @@ class App extends React.Component<{}, State> {
         const {inOffice, userEmail} = this.state;
         try{
             if(inOffice) {
-                await workLogger.put("/log", {
-                    dateString: new Date().toString(),
-                    userEmail
-                });
+                if(inProduction) {
+                    await workLogger.put("/log", {
+                        dateString: new Date().toString(),
+                        userEmail
+                    });
+                }
                 this.setState({
                     inOffice: false
                 })
@@ -143,10 +147,12 @@ class App extends React.Component<{}, State> {
     onRequestLog = async () => {
         const {userEmail} = this.state;
         try {
-            await workLogger.post("/send", {
-                dateString: new Date().toString(),
-                userEmail
-            });
+            if(inProduction) {
+                await workLogger.post("/send", {
+                    dateString: new Date().toString(),
+                    userEmail
+                });
+            }
             this.showBanner('Log sent successfuly')
         } catch(err) {
             this.showBanner("Failed to send log", ' alert-danger');
@@ -174,7 +180,7 @@ class App extends React.Component<{}, State> {
         }
         return (
             <>
-                <HelloMessage 
+                <GreetingMessage 
                     userName={state.user.getBasicProfile().getName()}
                     currentHour={new Date().getHours()}
                 />

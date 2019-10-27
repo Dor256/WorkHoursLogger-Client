@@ -1,12 +1,12 @@
 import React from "react";
 import Header from "./basics/Header";
 
-type HelloMessageProps = {
+type GreetingMessageProps = {
     userName: string,
     currentHour: number
 }
 
-const HelloMessage = (props: HelloMessageProps) => {
+const GreetingMessage = (props: GreetingMessageProps) => {
     const {userName, currentHour} = props;
 
     const getMessageText = (): string => {
@@ -25,4 +25,4 @@ const HelloMessage = (props: HelloMessageProps) => {
     );
 }
 
-export default HelloMessage;
+export default GreetingMessage;

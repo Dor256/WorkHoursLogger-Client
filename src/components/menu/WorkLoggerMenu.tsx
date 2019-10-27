@@ -10,19 +10,16 @@ type Props = {
     onRequestLog: () => void;
 }
 
-class WorkLoggerMenu extends React.Component<Props> {
-    state = {};
+const WorkLoggerMenu = (props: Props) => {
+    const {inOffice, onEmployeeLeave, onRequestLog, onEmployeeEnter} = props;
 
-    render() {
-        const { props } = this;
-        return (
-            <>
-                <EnterButton onClick={props.onEmployeeEnter} inOffice={props.inOffice}/>
-                <Button className="btn btn-primary button" onClick={props.onEmployeeLeave}>Exit</Button>
-                <Button className="btn btn-primary button" onClick={props.onRequestLog}>Send Log</Button>
-            </>
-        );
-    } 
+    return (
+        <>
+            <EnterButton onClick={onEmployeeEnter} inOffice={inOffice}/>
+            <Button className="btn btn-primary button" onClick={onEmployeeLeave}>Exit</Button>
+            <Button className="btn btn-primary button" onClick={onRequestLog}>Send Log</Button>
+        </>
+    );
 }
 
 export default WorkLoggerMenu;

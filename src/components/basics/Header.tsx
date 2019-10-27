@@ -3,7 +3,7 @@ import "./Header.scss";
 
 export type HeaderProps = {
     className: string,
-    children?: string | JSX.Element | React.ReactNode[];
+    children?: string | JSX.Element | React.ReactNode[]
 }
 
 const Header = (props: HeaderProps) => {
