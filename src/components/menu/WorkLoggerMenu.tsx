@@ -1,5 +1,4 @@
 import React from "react";
-import "./WorkLoggerMenu.scss";
 import EnterButton from "./EnterButton";
 import Button from "../basics/Button";
 
