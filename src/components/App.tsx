@@ -70,7 +70,7 @@ class App extends React.Component<{}, State> {
         this.setState({
             bannerMessage: {
                 message,
-                type,
+                type
             }
         });
 

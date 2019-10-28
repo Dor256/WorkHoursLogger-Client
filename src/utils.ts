@@ -1,7 +1,7 @@
 export const validUser = (user: GoogleUser): boolean => {
     const userProfile = user.getBasicProfile();
     if(userProfile) {
-        return userProfile.getEmail().split("@")[1] === "techsee.me";
+        return (userProfile.getEmail().split("@")[1] === "techsee.me") || userProfile.getEmail() === "workloggersd@gmail.com";
     }
     return false;
 } 
