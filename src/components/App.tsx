@@ -173,6 +173,7 @@ class App extends React.Component<{}, State> {
         if (!(state.user && validUser(state.user))) {
             return (
                 <Container className="app-container menu auth">
+                    <StatusBanner bannerMessage={this.state.bannerMessage}/>
                     <MenuHeader/>
                     <GoogleAuth/>
                 </Container>
