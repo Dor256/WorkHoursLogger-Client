@@ -12,7 +12,7 @@
 /build
 
 # Api keys
-/src/api
+/src/api/OAuth.ts
 
 # misc
 .DS_Store
