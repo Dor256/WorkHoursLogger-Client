@@ -7,9 +7,10 @@ import LoadingSpinner from "./LoadingSpinner";
 import GoogleAuth from "./GoogleAuth";
 import Container from "./basics/Container";
 import MenuHeader from "./basics/MenuHeader";
+import WorkHoursTable from "./table/WorkHoursTable";
 import WorkLoggerMenu from "./menu/WorkLoggerMenu";
-import "./App.scss";
 import GreetingMessage from "./GreetingMessage";
+import "./App.scss";
 
 type State = {
     isLoading: boolean,
@@ -17,6 +18,13 @@ type State = {
     userEmail: string,
     inOffice: boolean,
     user?: GoogleUser
+}
+
+export type WorkLoggerEntry = {
+    day: string,
+    date: string,
+    start: string,
+    finish: string
 }
 
 const BANNER_CLOSE_DELAY = 3000;
@@ -43,9 +51,8 @@ class App extends React.Component<{}, State> {
                 this.setState({ isLoading: false });
             }
             const userEmail = basicUserProfile.getEmail();
-            workLogger.post("/check", {
-                userEmail
-            }).then((res: {data: boolean}) => {
+            workLogger.post("/check", {userEmail})
+            .then((res: {data: boolean}) => {
                 this.setState({
                     inOffice: res.data,
                     isLoading: false,
@@ -160,6 +167,20 @@ class App extends React.Component<{}, State> {
         }
     }
 
+    onShowTable = async (): Promise<WorkLoggerEntry[] | undefined> => {
+        const {userEmail} = this.state;
+        try {
+            const response = await workLogger.post("/show", {
+                                dateString: new Date().toString(),
+                                userEmail
+                            });
+            return response.data;
+        } catch(err) {
+            this.showBanner("Failed to load table", ' alert-danger');
+            console.log(err);
+        }
+    }
+
     render() {
         const { state } = this;
         if(state.isLoading) {
@@ -181,7 +202,10 @@ class App extends React.Component<{}, State> {
         }
         return (
             <>
-                <GreetingMessage 
+                <Container className="app-container">
+                    <WorkHoursTable onShowTable={this.onShowTable}/>
+                </Container>
+                {/* <GreetingMessage 
                     userName={state.user.getBasicProfile().getName()}
                     currentHour={new Date().getHours()}
                 />
@@ -194,7 +218,7 @@ class App extends React.Component<{}, State> {
                         onRequestLog={this.onRequestLog}
                         inOffice={this.state.inOffice}
                     />
-                </Container>
+                </Container> */}
             </>
         );
     }
