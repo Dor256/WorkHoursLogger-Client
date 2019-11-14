@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import { validUser, isUsingSafari, inProduction } from "../utils";
 import clientId from "../api/OAuth";
 import workLogger from "../api/workLogger";
@@ -201,26 +202,46 @@ class App extends React.Component<{}, State> {
             );
         }
         return (
-            <>
-                <Container className="app-container">
-                    <WorkHoursTable onShowTable={this.onShowTable}/>
-                </Container>
-                {/* <GreetingMessage 
-                    userName={state.user.getBasicProfile().getName()}
-                    currentHour={new Date().getHours()}
-                />
-                <Container className="app-container menu">
-                    <StatusBanner bannerMessage={this.state.bannerMessage}/>
-                    <MenuHeader/>
-                    <WorkLoggerMenu
-                        onEmployeeEnter={this.onEmployeeEnter}
-                        onEmployeeLeave={this.onEmployeeLeave}
-                        onRequestLog={this.onRequestLog}
-                        inOffice={this.state.inOffice}
-                    />
-                </Container> */}
-            </>
+            <BrowserRouter>
+                <Switch>
+                    <Route exact path="/" component={this.renderWorkLoggerMenu}/>
+                    <Route exact path="/show" component={this.renderWorkHoursTable}/>
+                </Switch>
+            </BrowserRouter>
         );
+    }
+
+    renderWorkHoursTable = () => {
+        return (
+            <Container className="app-container">
+                <WorkHoursTable onShowTable={this.onShowTable}/>
+                <Link className="btn btn-primary button" to="/">Back</Link>
+            </Container>
+        );
+    }
+
+    renderWorkLoggerMenu = () => {
+        if(this.state.user) {
+            return (
+                <>
+                    <GreetingMessage 
+                        userName={this.state.user.getBasicProfile().getName()}
+                        currentHour={new Date().getHours()}
+                    />
+                    <Container className="app-container menu">
+                        <StatusBanner bannerMessage={this.state.bannerMessage}/>
+                        <MenuHeader/>
+                        <WorkLoggerMenu
+                            onEmployeeEnter={this.onEmployeeEnter}
+                            onEmployeeLeave={this.onEmployeeLeave}
+                            onRequestLog={this.onRequestLog}
+                            inOffice={this.state.inOffice}
+                        />
+                    </Container> 
+                </>
+            );
+        }
+        return null;
     }
 }
 

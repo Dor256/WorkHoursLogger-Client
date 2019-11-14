@@ -4,6 +4,7 @@ import WorkTableBody from "./WorkTableBody";
 import Table from "../basics/Table";
 import { WorkLoggerEntry } from "../App";
 import "./WorkHoursTable.scss";
+import LoadingSpinner from "../LoadingSpinner";
 
 type WorkHoursTableProps = {
     onShowTable(): Promise<WorkLoggerEntry[] | undefined>
@@ -31,7 +32,7 @@ class WorkHoursTable extends React.Component<WorkHoursTableProps, WorkHoursTable
                 </Table>
             );
         }
-        return null;
+        return <LoadingSpinner/>;
     }
 }
 
