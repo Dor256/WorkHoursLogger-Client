@@ -17,6 +17,7 @@ type State = {
     isLoading: boolean,
     bannerMessage?: BannerMessage,
     userEmail: string,
+    userId: string,
     inOffice: boolean,
     user?: GoogleUser
 }
@@ -34,7 +35,8 @@ class App extends React.Component<{}, State> {
     state: State = {
         isLoading: true,
         userEmail: "",
-        inOffice: false
+        inOffice: false,
+        userId: ""
     };
 
     componentDidMount = () => {
@@ -52,12 +54,14 @@ class App extends React.Component<{}, State> {
                 this.setState({ isLoading: false });
             }
             const userEmail = basicUserProfile.getEmail();
-            workLogger.post("/check", {userEmail})
+            const userId = basicUserProfile.getId();
+            workLogger.post("/check", {userId, userEmail})
             .then((res: {data: boolean}) => {
                 this.setState({
                     inOffice: res.data,
                     isLoading: false,
                     userEmail,
+                    userId,
                     user
                 })
             });
@@ -71,7 +75,7 @@ class App extends React.Component<{}, State> {
     hideBanner = () => {
         this.setState({
             bannerMessage: undefined
-        })
+        });
     }
 
     showBanner = (message: string, type: BootstrapAlertClass = ' alert-success', hideDelay: number = BANNER_CLOSE_DELAY) => {
@@ -94,7 +98,8 @@ class App extends React.Component<{}, State> {
         const userValid = validUser(currentUser);
         if (signedIn && userValid) {
             const userEmail = currentUser.getBasicProfile().getEmail();
-            this.setState({ isLoading: false, userEmail, user: currentUser });
+            const userId = currentUser.getBasicProfile().getId()
+            this.setState({ isLoading: false, userEmail, userId, user: currentUser });
         } else if (!userValid) {
             if (signedIn) {
                 gapi.auth2.getAuthInstance().signOut();
@@ -105,13 +110,14 @@ class App extends React.Component<{}, State> {
     }
 
     onEmployeeEnter = async () => {
-        const {inOffice, userEmail} = this.state;
+        const {inOffice, userEmail, userId} = this.state;
         try {
             if(!inOffice) {
                 if(inProduction) {
                     await workLogger.post("/log", {
                         dateString: new Date().toString(),
-                        userEmail
+                        userEmail,
+                        userId
                     });
                 }
                 this.setState({
@@ -128,13 +134,14 @@ class App extends React.Component<{}, State> {
     }
 
     onEmployeeLeave = async () => {
-        const {inOffice, userEmail} = this.state;
+        const {inOffice, userEmail, userId} = this.state;
         try{
             if(inOffice) {
                 if(inProduction) {
                     await workLogger.put("/log", {
                         dateString: new Date().toString(),
-                        userEmail
+                        userEmail,
+                        userId
                     });
                 }
                 this.setState({
@@ -153,12 +160,13 @@ class App extends React.Component<{}, State> {
     }
 
     onRequestLog = async () => {
-        const {userEmail} = this.state;
+        const {userEmail, userId} = this.state;
         try {
             if(inProduction) {
                 await workLogger.post("/send", {
                     dateString: new Date().toString(),
-                    userEmail
+                    userEmail,
+                    userId
                 });
             }
             this.showBanner('Log sent successfuly')
@@ -169,11 +177,12 @@ class App extends React.Component<{}, State> {
     }
 
     onShowTable = async (): Promise<WorkLoggerEntry[] | undefined> => {
-        const {userEmail} = this.state;
+        const {userEmail, userId} = this.state;
         try {
             const response = await workLogger.post("/show", {
                                 dateString: new Date().toString(),
-                                userEmail
+                                userEmail,
+                                userId
                             });
             return response.data;
         } catch(err) {
